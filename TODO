@@ -1,0 +1,11 @@
+meet the problem of sfl4j version confliction between ftpserver & jetty-test-server
+
+How to solve:
+
+1. switch to executor project
+2. add jetty-test-server to test executor project
+3. switch back to backend project, use the copy from executor, and test backend project.
+4. add ftp-server to ....
+5. solve it!
+
+Add at 00:06 AM. Aug 29. Mon
