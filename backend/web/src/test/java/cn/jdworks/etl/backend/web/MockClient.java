@@ -20,7 +20,6 @@ public class MockClient {
 		request.setHeader("Host", "tester");
 		request.setVersion("HTTP/1.0");
 		request.setMethod("GET");
-		request.setContentType("application/x-www-form-urlencoded");
 		request.setURI(PREFIX + url + "?" + content);
 		if (cookie != null && !cookie.isEmpty())
 			request.setHeader("Cookie", cookie);
@@ -38,7 +37,6 @@ public class MockClient {
 		request.setHeader("Host", "tester");
 		request.setVersion("HTTP/1.0");
 		request.setMethod("POST");
-		request.setContentType("application/x-www-form-urlencoded");
 		request.setURI(PREFIX + url);
 		request.setContent(content);
 		if (cookie != null && !cookie.isEmpty())

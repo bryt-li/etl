@@ -36,6 +36,7 @@ public class MainSetup implements Setup {
 
 		// start exe ftp dir sync server
 		try {
+			
 			// start ftp server for exe task sync
 			this.ftpServer.startServer();
 
@@ -44,6 +45,7 @@ public class MainSetup implements Setup {
 
 			// start timetask scheduler
 			this.timeTaskScheduler.startScheduler();
+			
 		} catch (FtpException e) {
 			LOG.fatal(e);
 			// Throw runtime exception to prevent webapp starting

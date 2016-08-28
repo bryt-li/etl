@@ -26,12 +26,12 @@ public class ExeDirSyncFtpServer {
 
 	public void startServer() throws FtpException {
 		FtpServerFactory serverFactory = new FtpServerFactory();
-
+		
 		// set port
 		ListenerFactory factory = new ListenerFactory();
 		factory.setPort(FTP_PORT);
 		serverFactory.addListener("default", factory.createListener());
-
+		
 		// allow anonymous
 		ConnectionConfigFactory connectionConfigFactory = new ConnectionConfigFactory();
 		connectionConfigFactory.setAnonymousLoginEnabled(true);

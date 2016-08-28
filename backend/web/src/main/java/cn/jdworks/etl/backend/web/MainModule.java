@@ -44,6 +44,11 @@ public class MainModule{
 	private ExecutorManager executorManager;
 
 	@At
+	public String foo(String args){
+		return args;
+	}
+	
+	@At
 	@POST
 	public boolean heartbeat(UUID uuid) {
 		return this.executorManager.resetTimeoutTick(uuid);

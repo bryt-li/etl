@@ -15,8 +15,8 @@
 
 	<name>ETL Backend Web Application</name>
 	<url>http://www.jdworks.cn</url>
-	
-	
+
+
 	<build>
 		<finalName>backend-web</finalName>
 		<resources>
@@ -46,8 +46,7 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>test-jetty-servlet</artifactId>
-			<version>8.1.19.v20160209</version>
-			<scope>test</scope>
+			<version>7.4.5.v20110725</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
