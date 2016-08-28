@@ -1,0 +1,11 @@
+2016-03-0420:55:42 [cn.jdworks.etl.task.App.main()] INFO  cn.jdworks.etl.task.App(line-10) 0     - hello world
+2016-03-0420:56:42 [cn.jdworks.etl.task.App.main()] INFO  cn.jdworks.etl.task.App(line-10) 0     - hello world
+2016-03-0421:08:46 [cn.jdworks.etl.task.App.main()] INFO  cn.jdworks.etl.task.App(line-15) 0     - task start.
+2016-03-0421:11:43 [cn.jdworks.etl.task.App.main()] INFO  cn.jdworks.etl.task.App(line-15) 0     - task start.
+2016-03-0421:11:43 [cn.jdworks.etl.task.App.main()] INFO  cn.jdworks.etl.task.App(line-24) 27    - task end.
+2016-03-0421:17:06 [cn.jdworks.etl.task.FooTask.main()] INFO  cn.jdworks.etl.task.FooTask(line-15) 0     - foo task start.
+2016-03-0421:17:06 [cn.jdworks.etl.task.FooTask.main()] INFO  cn.jdworks.etl.task.FooTask(line-24) 28    - foo task end.
+2016-03-0421:20:51 [cn.jdworks.etl.task.FooTask.main()] INFO  cn.jdworks.etl.task.FooTask(line-15) 0     - foo task start.
+2016-03-0421:20:51 [cn.jdworks.etl.task.FooTask.main()] INFO  cn.jdworks.etl.task.FooTask(line-24) 58    - foo task end.
+2016-03-0612:12:05 [cn.jdworks.etl.task.FooTask.main()] INFO  cn.jdworks.etl.task.FooTask(line-15) 0     - foo task start.
+2016-03-0612:12:05 [cn.jdworks.etl.task.FooTask.main()] INFO  cn.jdworks.etl.task.FooTask(line-24) 51    - foo task end.
