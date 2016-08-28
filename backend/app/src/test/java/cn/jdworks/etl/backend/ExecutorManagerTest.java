@@ -18,10 +18,7 @@ public class ExecutorManagerTest {
 //	@Before
 	public void init() throws Exception {
 		Ioc ioc = new NutIoc(new ComboIocLoader("*js", "conf/ioc/dao.js", "conf/ioc/biz.js", "*anno", "cn.jdworks.etl.backend"));
-		this.dao = ioc.get(Dao.class, "dao");
-		this.executorManager = ioc.get(ExecutorManager.class);
-		this.executorManager.setDao(this.dao);
-		this.executorManager.startExecutorManager();
+		
 	}
 
 //	@Test(timeout = 20000)

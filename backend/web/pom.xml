@@ -42,5 +42,22 @@
 			<artifactId>app</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/test-jetty-servlet -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>test-jetty-servlet</artifactId>
+			<version>8.1.19.v20160209</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.38</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>1.0.16</version>
+		</dependency>
 	</dependencies>
 </project>

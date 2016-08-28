@@ -24,37 +24,10 @@
 			<version>1.0.6</version>
 			<type>pom</type>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/test-jetty-servlet -->
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>test-jetty-servlet</artifactId>
-			<version>8.1.19.v20160209</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.nutz</groupId>
 			<artifactId>nutz</artifactId>
 			<version>1.r.55</version>
-		</dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.38</version>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid</artifactId>
-			<version>1.0.16</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-broker</artifactId>
-			<version>5.13.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-kahadb-store</artifactId>
-			<version>5.13.1</version>
 		</dependency>
 	</dependencies>
 

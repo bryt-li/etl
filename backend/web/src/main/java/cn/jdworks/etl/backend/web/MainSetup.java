@@ -1,4 +1,4 @@
-package cn.jdworks.etl.backend.app;
+package cn.jdworks.etl.backend.web;
 
 import org.apache.ftpserver.ftplet.FtpException;
 import org.nutz.dao.Dao;
@@ -31,7 +31,8 @@ public class MainSetup implements Setup {
 	public void init(NutConfig conf) {
 		Ioc ioc = conf.getIoc();
 		Dao dao = ioc.get(Dao.class);
-		Daos.createTablesInPackage(dao, "cn.jdworks.etl.backend.bean", true);
+		
+		Daos.createTablesInPackage(dao, "cn.jdworks.etl.backend.app.bean", true);
 
 		// start exe ftp dir sync server
 		try {
@@ -39,7 +40,7 @@ public class MainSetup implements Setup {
 			this.ftpServer.startServer();
 
 			// start executors manager
-			this.executorManager.startExecutorManager();
+			this.executorManager.startManager();
 
 			// start timetask scheduler
 			this.timeTaskScheduler.startScheduler();
@@ -49,7 +50,6 @@ public class MainSetup implements Setup {
 			// NOTE: this feature is dependent on webapp container
 			throw new RuntimeException();
 		}
-
 	}
 
 	public void destroy(NutConfig conf) {

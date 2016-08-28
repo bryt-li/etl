@@ -1,4 +1,4 @@
-package cn.jdworks.etl.backend.app.module;
+package cn.jdworks.etl.backend.web.module;
 
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;

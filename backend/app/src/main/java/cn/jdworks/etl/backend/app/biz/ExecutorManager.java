@@ -4,15 +4,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.activemq.broker.BrokerFactory;
-import org.apache.activemq.broker.BrokerService;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -30,13 +27,6 @@ public class ExecutorManager extends Thread {
 	@Inject
 	protected Dao dao;
 
-	// for unit test only
-	public void setDao(Dao dao) {
-		this.dao = dao;
-	};
-
-	private BrokerService broker;
-
 	private boolean isRunning;
 
 	@Inject("java:$config.getInt('tcpPort')")
@@ -45,16 +35,47 @@ public class ExecutorManager extends Thread {
 	@Inject("java:$config.get('jmsUrl')")
 	private String JMS_URL;
 
-	private JmsConnector jmsConnector;
-
-	private ServerSocket listenSocket;
-
-	private List<TcpConnector> executors;
-
 	// resource statistics of executors(according to the asynchronizedly
 	// received JMS logs)
 	private Hashtable<UUID, ExecutorStat> executorStats;
 
+	
+	public void startManager() {
+		this.setRunning(true);
+		this.start();
+	}
+
+	public void shutdown() {
+		this.setRunning(false);
+		try {
+			this.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void run() {
+		while(isRunning()){
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private synchronized boolean isRunning() {
+		return isRunning;
+	}
+
+	private synchronized void setRunning(boolean isRunning) {
+		this.isRunning = isRunning;
+	}
+
+	
+	
+	/*
 	private synchronized void upThread(UUID executorId) {
 		if (this.executorStats.get(executorId) == null)
 			this.executorStats.put(executorId, new ExecutorStat());
@@ -123,114 +144,7 @@ public class ExecutorManager extends Thread {
 		this.executorStats = new Hashtable<UUID, ExecutorStat>();
 	}
 
-	public void startExecutorManager() {
-		LOG.info("JMS broker url is: " + this.JMS_URL);
-		if (startBroker()) {
-			LOG.info("broker start.");
-		}
-		this.jmsConnector = new JmsConnector(this, this.JMS_URL);
-		this.jmsConnector.startConnector();
-
-		this.setRunning(true);
-		this.start();
-	}
-
-	public void shutdown() {
-		this.jmsConnector.stopConnector();
-		LOG.info("JmsConnector stop.");
-
-		this.stopBroker();
-		LOG.info("broker stop.");
-
-		// close all executor's TCP connections
-		for (TcpConnector exe : this.executors) {
-			exe.close();
-			try {
-				exe.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
-		this.setRunning(false);
-		try {
-			this.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		try {
-			this.listenSocket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void run() {
-		try {
-			LOG.info("Tcp listen port is: " + this.TCP_PORT);
-			this.listenSocket = new ServerSocket(this.TCP_PORT);
-			this.listenSocket.setSoTimeout(1000);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		while (this.isRunning()) {
-			try {
-				Socket socket = this.listenSocket.accept();
-				TcpConnector exe = new TcpConnector(socket);
-				if (exe.startConnector(this))
-					this.addExecutor(exe);
-				LOG.debug("executor connected.");
-			} catch (Exception e) {
-				if (e instanceof SocketTimeoutException)
-					continue;
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private boolean startBroker() {
-		try {
-			// This system property is used if we don‘t want to
-			// have persistence messages as a default
-			System.setProperty("activemq.persistenceAdapter", "org.apache.activemq.store.vm.VMPersistenceAdapter");
-
-			broker = BrokerFactory.createBroker(new URI("broker://()/localhost"));
-			broker.setBrokerName("DefaultBroker");
-			broker.addConnector(this.JMS_URL);
-			broker.setUseShutdownHook(false);
-			broker.start();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			this.broker = null;
-			return false;
-		}
-	}
-
-	private void stopBroker() {
-		if (this.broker != null) {
-			try {
-				this.broker.stop();
-				this.broker.waitUntilStopped();
-				this.broker = null;
-			} catch (Exception e) {
-				e.printStackTrace();
-				this.broker = null;
-			}
-		}
-	}
-
-	private synchronized boolean isRunning() {
-		return isRunning;
-	}
-
-	private synchronized void setRunning(boolean isRunning) {
-		this.isRunning = isRunning;
-	}
-
+	
 	public synchronized void executeTask(int taskId, String taskType, String cmd) {
 		TaskExe exe = new TaskExe();
 		exe.setId_Task(taskId);
@@ -263,47 +177,10 @@ public class ExecutorManager extends Thread {
 			return;
 		}
 	}
-
-	// event handler for JmsConnector
-	public synchronized void onTaskExeLogReceived(String type, int taskExeId, UUID executorId, Date timestamp,
-			String log) {
-		// make sure taskExeId exists in db
-		TaskExe exe = dao.fetch(TaskExe.class, taskExeId);
-		if (exe == null) {
-			LOG.error("Exe log received with wrong taskExeId: " + taskExeId);
-			return;
-		}
-
-		if (type.equals("THREAD++")) {
-			this.upThread(executorId);
-		} else if (type.equals("THREAD--")) {
-			this.downThread(executorId);
-		} else if (type.equals("CONNECT++")) {
-			this.upDbConn(executorId, log);
-		} else if (type.equals("CONNECT--")) {
-			this.downDbConn(executorId, log);
-		} else if (type.equals("START")) {
-			exe.setStatus("EXECUTING");
-			exe.setExeTime(timestamp);
-			dao.update(exe);
-			LOG.info("Task started. id:" + exe.getId());
-		}else if (type.equals("END")) {
-			exe.setStatus("FINISHED");
-			exe.setExitValue("OK");
-			exe.setExitTime(timestamp);
-			dao.update(exe);
-			LOG.info("Task ended. id:" + exe.getId());
-		} else {
-			ExeLog el = new ExeLog();
-			el.setId_TaskExe(taskExeId);
-			el.setTimestamp(timestamp);
-			el.setType(type);
-			el.setLog(log);
-			dao.insert(el);
-			LOG.info("Task log received. taskExeId:" + taskExeId + " type: " + type + " log: " + el.getLog());
-		}
+*/
+	public synchronized void executeTask(int taskId, String taskType, String cmd) {
 	}
-
+	
 	public boolean resetTimeoutTick(UUID uuid) {
 		// TODO Auto-generated method stub
 		return false;

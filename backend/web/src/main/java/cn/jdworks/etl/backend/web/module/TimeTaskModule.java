@@ -1,4 +1,4 @@
-package cn.jdworks.etl.backend.app.module;
+package cn.jdworks.etl.backend.web.module;
 
 import org.nutz.dao.Dao;
 
