@@ -13,6 +13,11 @@ import org.nutz.mvc.annotation.POST;
 public class ExeModule {
 
 	@At
+	public String foo(){
+		return "FOO";
+	}
+	
+	@At
 	@POST
 	public boolean task(String cmd) {
 		return true;

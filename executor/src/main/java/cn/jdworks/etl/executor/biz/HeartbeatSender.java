@@ -3,7 +3,9 @@ package cn.jdworks.etl.executor.biz;
 import java.util.UUID;
 
 import org.nutz.ioc.loader.annotation.Inject;
+import org.nutz.ioc.loader.annotation.IocBean;
 
+@IocBean(singleton = true)
 public class HeartbeatSender extends Thread {
 	private UUID uuid;
 	private boolean isRunning = false;

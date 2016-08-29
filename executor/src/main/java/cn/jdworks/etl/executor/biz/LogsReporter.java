@@ -2,6 +2,9 @@ package cn.jdworks.etl.executor.biz;
 
 import java.util.UUID;
 
+import org.nutz.ioc.loader.annotation.IocBean;
+
+@IocBean(singleton = true)
 public class LogsReporter extends Thread {
 	private UUID uuid;
 

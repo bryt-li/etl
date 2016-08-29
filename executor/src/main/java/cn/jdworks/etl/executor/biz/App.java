@@ -16,7 +16,7 @@ public class App {
 	private static InetAddress tcpServerAddr;
 	private static int tcpServerPort;
 
-	private JmsConnector jmsConnector;
+//	private JmsConnector jmsConnector;
 	private TcpConnector tcpConnector;
 	
 	private List<TaskRuntime> runningTasks;
@@ -60,8 +60,8 @@ public class App {
 
 	private boolean start() {
 		try {
-			jmsConnector = new JmsConnector(jmsLoggerAddr);
-			jmsConnector.startConnector();
+//			jmsConnector = new JmsConnector(jmsLoggerAddr);
+//			jmsConnector.startConnector();
 
 			tcpConnector = new TcpConnector(this, tcpServerAddr, tcpServerPort);
 			tcpConnector.startConnector();
@@ -79,7 +79,7 @@ public class App {
 			task.abortTask();
 		}
 		tcpConnector.stopConnector();
-		jmsConnector.stopConnector();
+//		jmsConnector.stopConnector();
 	}
 
 	public void executeTask(int id, String cmd) {
@@ -96,6 +96,6 @@ public class App {
 
 	public void addLogsToJmsSendingQueue(String type, int taskId, long timestamp, String log) {
 		String exLog = type+":"+taskId+":"+this.tcpConnector.getUuid()+":"+timestamp+":"+log;
-		this.jmsConnector.addLogsQueue(exLog);
+//		this.jmsConnector.addLogsQueue(exLog);
 	}
 }

@@ -39,9 +39,15 @@ ComboIocProvider的args参数, 星号开头的是类名或内置缩写,剩余的
 @Ok("json")
 @Fail("http:500")
 public class MainModule{
+	
 	@Inject
 	private TaskManager taskManager;
 
+	@At
+	public String foo(){
+		return "FOO";
+	}
+	
 	@At
 	@POST
 	public String run(int taskId, String cmd) {

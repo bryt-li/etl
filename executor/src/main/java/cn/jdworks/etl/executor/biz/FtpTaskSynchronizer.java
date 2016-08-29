@@ -1,5 +1,8 @@
 package cn.jdworks.etl.executor.biz;
 
+import org.nutz.ioc.loader.annotation.IocBean;
+
+@IocBean(singleton = true)
 public class FtpTaskSynchronizer extends Thread {
 	private boolean isRunning = false;
 

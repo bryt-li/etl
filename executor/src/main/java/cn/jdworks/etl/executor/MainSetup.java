@@ -34,7 +34,7 @@ public class MainSetup implements Setup {
 
 	public void init(NutConfig conf) {
 		try {
-			this.taskManager.init(uuid);
+			this.taskManager.startManager(uuid);
 			this.ftpTaskSynchronizer.init();
 			this.heartbeatSender.init(uuid);
 			this.logsReporter.init(uuid);
