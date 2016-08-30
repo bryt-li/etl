@@ -1,3 +1,10 @@
+=Todo
+
+Finish executor logic, and write fully tested code.
+
+= Solved 
+
+=== on Aug. 30
 meet the problem of sfl4j version confliction between ftpserver & jetty-test-server
 
 How to solve:

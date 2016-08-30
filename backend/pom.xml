@@ -4,16 +4,45 @@
 
 	<groupId>cn.jdworks.etl</groupId>
 	<artifactId>backend</artifactId>
-	<packaging>pom</packaging>
-	<name>ETL Backend Project</name>
+	<packaging>war</packaging>
 	<version>1.0</version>
 
-	<modules>
-		<module>app</module>
-		<module>web</module>
-	</modules>
+	<name>ETL Backend Web Application</name>
+	<url>http://www.jdworks.cn</url>
 
+
+	<build>
+		<finalName>backend</finalName>
+		<resources>
+			<resource>
+				<directory>conf</directory>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<port>9090</port>
+					<uriEncoding>UTF-8</uriEncoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	<dependencies>
+		<dependency>
+			<groupId>cn.jdworks.etl</groupId>
+			<artifactId>utils</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.ftpserver/ftpserver -->
+		<dependency>
+			<groupId>org.apache.ftpserver</groupId>
+			<artifactId>ftpserver</artifactId>
+			<version>1.0.6</version>
+			<type>pom</type>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -21,9 +50,36 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>test-jetty-servlet</artifactId>
+			<version>8.1.19.v20160209</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.nutz</groupId>
+			<artifactId>nutz</artifactId>
+			<version>1.r.55</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.38</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>1.0.16</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.21</version>
+		</dependency>
+		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.14</version>
+			<version>1.2.17</version>
 		</dependency>
 	</dependencies>
 </project>
