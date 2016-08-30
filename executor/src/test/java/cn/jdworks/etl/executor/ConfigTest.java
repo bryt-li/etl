@@ -8,14 +8,14 @@ import org.junit.*;
 
 public class ConfigTest {
 
-	@Test
+//	@Test
 	public void StringTest(){
 		String foo = "";
 		foo = foo + "foo";
 		Assert.assertEquals(foo, "foo");
 	}
 	
-	@Test
+//	@Test
 	public void ReadConfig() {
 		InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("server.properties");
 		Properties p = new Properties();

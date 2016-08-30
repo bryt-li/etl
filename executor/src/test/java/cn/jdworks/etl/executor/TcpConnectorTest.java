@@ -14,13 +14,13 @@ public class TcpConnectorTest {
 
 	private BackendServer server;
 	
-	@Before
+//	@Before
 	public void start(){
 		this.server = new BackendServer();
 		this.server.startServer(TCP_PORT);
 	}
 	
-	@After
+//	@After
 	public void stop() throws InterruptedException{
 		this.server.stopServer();
 	}

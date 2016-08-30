@@ -1,6 +1,10 @@
-package cn.jdworks.etl.backend.web;
+package cn.jdworks.etl.executor.module;
+
+import static org.junit.Assert.*;
 
 import java.util.EnumSet;
+
+import javax.servlet.DispatcherType;
 
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.testing.HttpTester;
@@ -10,9 +14,10 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-public class MainModuleTest {
+import cn.jdworks.etl.executor.module.MockClient;
+
+public class ExeModuleTest {
 
 	private static ServletTester server;
 	private static MockClient client;
@@ -23,16 +28,17 @@ public class MainModuleTest {
 		server.setContextPath("/");
 
 		// enabled nutz
-		FilterHolder filter = server.addFilter(org.nutz.mvc.NutFilter.class, "/*", 2);
-		filter.setInitParameter("modules", "cn.jdworks.etl.backend.web.MainModule");
+		FilterHolder filter = server.addFilter(org.nutz.mvc.NutFilter.class, "/*",
+				EnumSet.of(DispatcherType.FORWARD, DispatcherType.REQUEST));
+		filter.setInitParameter("modules", "cn.jdworks.etl.executor.EntryModule");
 		server.addServlet(org.nutz.mvc.NutServlet.class, "/");
-
+		
 		// start
 		server.start();
 		System.out.println("Servelet tester started.");
 
 		// init client
-		client = new MockClient(server, "/main");
+		client = new MockClient(server, "/exe");
 	}
 
 	@AfterClass
@@ -53,8 +59,8 @@ public class MainModuleTest {
 
 	@Test
 	public void testFoo() throws Exception {
-		// signup
-		HttpTester response = client.get("/foo", "foo");
+		HttpTester response = client.get("/foo", "");
 		assertEquals(200, response.getStatus());
 	}
+	
 }

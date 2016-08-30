@@ -14,7 +14,7 @@ public class ExeModule {
 
 	@At
 	public String foo(){
-		return "FOO";
+		return "foo";
 	}
 	
 	@At

@@ -35,7 +35,7 @@ ComboIocProvider的args参数, 星号开头的是类名或内置缩写,剩余的
 */
 @Modules(scanPackage=true)
 @IocBean
-@At("/")
+@At("/main")
 @Ok("json")
 @Fail("http:500")
 public class MainModule{

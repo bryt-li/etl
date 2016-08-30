@@ -38,7 +38,7 @@ public class TimerTest {
         //timer.schedule(task, date);
     }
 
-    @Test
+//    @Test
     public void Test() {
         showTimer();
     }

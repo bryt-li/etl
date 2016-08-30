@@ -20,7 +20,9 @@ public class MockClient {
 		request.setHeader("Host", "tester");
 		request.setVersion("HTTP/1.0");
 		request.setMethod("GET");
-		request.setURI(PREFIX + url + "?" + content);
+		String uri = PREFIX + url + "?" + content;
+		System.out.println("GET: "+uri);
+		request.setURI(uri);
 		if (cookie != null && !cookie.isEmpty())
 			request.setHeader("Cookie", cookie);
 
@@ -38,6 +40,8 @@ public class MockClient {
 		request.setVersion("HTTP/1.0");
 		request.setMethod("POST");
 		request.setURI(PREFIX + url);
+		System.out.println("POST: "+url);
+		
 		request.setContent(content);
 		if (cookie != null && !cookie.isEmpty())
 			request.setHeader("Cookie", cookie);

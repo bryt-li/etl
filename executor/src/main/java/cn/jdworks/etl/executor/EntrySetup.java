@@ -15,7 +15,7 @@ import cn.jdworks.etl.executor.biz.LogsReporter;
 import cn.jdworks.etl.executor.biz.TaskManager;
 
 @IocBean
-public class MainSetup implements Setup {
+public class EntrySetup implements Setup {
 	private final Log LOG = Logs.getLog(this.getClass());
 
 	private final UUID uuid = UUID.randomUUID();
@@ -33,6 +33,7 @@ public class MainSetup implements Setup {
 	private LogsReporter logsReporter;
 
 	public void init(NutConfig conf) {
+		/*
 		try {
 			this.taskManager.startManager(uuid);
 			this.ftpTaskSynchronizer.init();
@@ -42,9 +43,11 @@ public class MainSetup implements Setup {
 			LOG.fatal(e);
 			throw new RuntimeException();
 		}
+		*/
 	}
 
 	public void destroy(NutConfig conf) {
+		/*
 		try {
 			this.taskManager.shutdown();
 			this.ftpTaskSynchronizer.shutdown();
@@ -54,6 +57,7 @@ public class MainSetup implements Setup {
 			LOG.fatal(e);
 			throw new RuntimeException();
 		}
+		*/
 	}
 
 }
