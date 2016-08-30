@@ -6530,7 +6530,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "cn.jdworks.etl.backend.app",
+											"text": "cn.jdworks.etl.backend",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -6730,11 +6730,11 @@
 											"containerExtending": false,
 											"left": 992,
 											"top": -320,
-											"width": 196,
+											"width": 212.05615234375,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "(from cn.jdworks.etl.backend.app)",
+											"text": "(from cn.jdworks.etl.backend)",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -6918,11 +6918,11 @@
 											"containerExtending": false,
 											"left": 861,
 											"top": 573,
-											"width": 196,
+											"width": 212.05615234375,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "(from cn.jdworks.etl.backend.app)",
+											"text": "(from cn.jdworks.etl.backend)",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -7256,7 +7256,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "cn.jdworks.etl.executor.web",
+											"text": "cn.jdworks.etl.executor",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -7277,7 +7277,7 @@
 											"containerExtending": false,
 											"left": 1664,
 											"top": -448,
-											"width": 115,
+											"width": 123.04931640625,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
@@ -7435,7 +7435,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "cn.jdworks.etl.backend.web",
+											"text": "cn.jdworks.etl.backend",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -7456,7 +7456,7 @@
 											"containerExtending": false,
 											"left": -16,
 											"top": 16,
-											"width": 115,
+											"width": 120.30078125,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
@@ -7636,11 +7636,11 @@
 											"containerExtending": false,
 											"left": 592,
 											"top": 400,
-											"width": 198,
+											"width": 213.9541015625,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "(from cn.jdworks.etl.backend.web)",
+											"text": "(from cn.jdworks.etl.backend)",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -7979,11 +7979,11 @@
 											"containerExtending": false,
 											"left": -256,
 											"top": -512,
-											"width": 198,
+											"width": 213.9541015625,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "(from cn.jdworks.etl.backend.web)",
+											"text": "(from cn.jdworks.etl.backend)",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -10671,11 +10671,11 @@
 											"containerExtending": false,
 											"left": -352,
 											"top": 64,
-											"width": 198,
+											"width": 213.9541015625,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "(from cn.jdworks.etl.backend.web)",
+											"text": "(from cn.jdworks.etl.backend)",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -11824,11 +11824,11 @@
 											"containerExtending": false,
 											"left": -1280,
 											"top": 80,
-											"width": 198,
+											"width": 213.9541015625,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "(from cn.jdworks.etl.backend.web)",
+											"text": "(from cn.jdworks.etl.backend)",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -11996,11 +11996,11 @@
 											"containerExtending": false,
 											"left": -464,
 											"top": 48,
-											"width": 198,
+											"width": 213.9541015625,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "(from cn.jdworks.etl.backend.web)",
+											"text": "(from cn.jdworks.etl.backend)",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -12168,11 +12168,11 @@
 											"containerExtending": false,
 											"left": 1696,
 											"top": 752,
-											"width": 199,
+											"width": 216.19482421875,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "(from cn.jdworks.etl.executor.web)",
+											"text": "(from cn.jdworks.etl.executor)",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -12340,11 +12340,11 @@
 											"containerExtending": false,
 											"left": 1584,
 											"top": 752,
-											"width": 199,
+											"width": 216.19482421875,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "(from cn.jdworks.etl.executor.web)",
+											"text": "(from cn.jdworks.etl.executor)",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -12512,11 +12512,11 @@
 											"containerExtending": false,
 											"left": 688,
 											"top": 752,
-											"width": 199,
+											"width": 216.19482421875,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "(from cn.jdworks.etl.executor.web)",
+											"text": "(from cn.jdworks.etl.executor)",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -12684,11 +12684,11 @@
 											"containerExtending": false,
 											"left": 608,
 											"top": 736,
-											"width": 199,
+											"width": 216.19482421875,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "(from cn.jdworks.etl.executor.web)",
+											"text": "(from cn.jdworks.etl.executor)",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -12834,7 +12834,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "cn.jdworks.etl.executor.app",
+											"text": "cn.jdworks.etl.executor",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -13031,11 +13031,11 @@
 											"containerExtending": false,
 											"left": 408,
 											"top": -128,
-											"width": 197,
+											"width": 214.296875,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "(from cn.jdworks.etl.executor.app)",
+											"text": "(from cn.jdworks.etl.executor)",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -22066,11 +22066,11 @@
 											"containerExtending": false,
 											"left": 1456,
 											"top": -360,
-											"width": 199,
+											"width": 216.19482421875,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "(from cn.jdworks.etl.executor.web)",
+											"text": "(from cn.jdworks.etl.executor)",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -22411,11 +22411,11 @@
 											"containerExtending": false,
 											"left": 1874,
 											"top": 1110,
-											"width": 199,
+											"width": 216.19482421875,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "(from cn.jdworks.etl.executor.web)",
+											"text": "(from cn.jdworks.etl.executor)",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -22728,11 +22728,11 @@
 											"containerExtending": false,
 											"left": -96,
 											"top": 1264,
-											"width": 198,
+											"width": 213.9541015625,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "(from cn.jdworks.etl.backend.web)",
+											"text": "(from cn.jdworks.etl.backend)",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -23101,11 +23101,11 @@
 											"containerExtending": false,
 											"left": 32,
 											"top": 208,
-											"width": 198,
+											"width": 213.9541015625,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "(from cn.jdworks.etl.backend.web)",
+											"text": "(from cn.jdworks.etl.backend)",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -23645,7 +23645,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFWhyQnA/qkNOE="
 							},
-							"name": "cn.jdworks.etl.backend.app",
+							"name": "cn.jdworks.etl.backend",
 							"ownedElements": [
 								{
 									"_type": "UMLPackage",
@@ -24001,7 +24001,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFWhyQnA/qkNOE="
 							},
-							"name": "cn.jdworks.etl.backend.web",
+							"name": "cn.jdworks.etl.backend",
 							"ownedElements": [
 								{
 									"_type": "UMLArtifactInstance",
@@ -24669,7 +24669,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFWh8RFex1GIJ8="
 							},
-							"name": "cn.jdworks.etl.executor.app",
+							"name": "cn.jdworks.etl.executor",
 							"ownedElements": [
 								{
 									"_type": "UMLPackage",
@@ -24887,7 +24887,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFWh8RFex1GIJ8="
 							},
-							"name": "cn.jdworks.etl.executor.web",
+							"name": "cn.jdworks.etl.executor",
 							"ownedElements": [
 								{
 									"_type": "UMLArtifactInstance",
