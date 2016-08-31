@@ -40,7 +40,7 @@ public class HttpRequest {
 				result += line;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			result = null;
 		}
 		// 使用finally块来关闭输入流
@@ -50,7 +50,7 @@ public class HttpRequest {
 					in.close();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 		}
 		return result;
@@ -93,7 +93,7 @@ public class HttpRequest {
 				result += line;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			result = null;
 		}
 		// 使用finally块来关闭输出流、输入流
@@ -106,7 +106,7 @@ public class HttpRequest {
 					in.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 		}
 		return result;

@@ -2,7 +2,6 @@ package cn.jdworks.etl.executor.biz;
 
 import java.util.UUID;
 
-import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
@@ -39,9 +38,9 @@ public class HeartbeatSender extends Thread {
 		this.start();
 	}
 
-	private final int SEND_INTERVAL = 5000;
-	private final int FIRST_SEND_INTERVAL = 500;
-	private final String OK = "OK";
+	public static final int SEND_INTERVAL = 5000;
+	public static final int FIRST_SEND_INTERVAL = 500;
+	public static final String OK = "OK";
 
 	int tick = 0;
 	boolean isFirst = true;
@@ -68,8 +67,10 @@ public class HeartbeatSender extends Thread {
 
 		String response = HttpRequest.sendPost(this.heartbeatUrl, this.uuid.toString());
 
-		if (response == OK) {
+		if (response.equals(OK)) {
 			this.isFirst = false;
+		}else{
+			this.isFirst = true;
 		}
 	}
 
@@ -79,8 +80,8 @@ public class HeartbeatSender extends Thread {
 
 		// send shutdown
 		String response = HttpRequest.sendPost(this.shutdownUrl, this.uuid.toString());
-		if (response != OK) {
-			LOG.warn("Send shutdown failed");
+		if (!response.equals(OK)) {
+			LOG.warn("Send shutdown failed. Expect: "+ OK + " But return: " + response);
 		}
 	}
 }
