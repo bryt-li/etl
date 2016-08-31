@@ -4,15 +4,23 @@ import java.util.UUID;
 
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
 
 @IocBean(singleton = true)
 public class HeartbeatSender extends Thread {
-	private UUID uuid;
-	private boolean isRunning = false;
+	private final Log LOG = Logs.getLog(this.getClass());
 
-	@Inject("java:$config.get('serverAddr')")
-	private String SERVER_ADDR;
+	private UUID uuid;
+
+	public UUID getUUID() {
+		return uuid;
+	}
+
 	private String heartbeatUrl;
+	private String shutdownUrl;
+
+	private boolean isRunning = false;
 
 	public synchronized boolean isRunning() {
 		return isRunning;
@@ -22,9 +30,11 @@ public class HeartbeatSender extends Thread {
 		this.isRunning = isRunning;
 	}
 
-	public void init(UUID uuid) {
-		this.heartbeatUrl = "http://" + SERVER_ADDR + "/backend/heartbeat";
-		this.uuid = uuid;
+	public void startSender(String serverAddr) {
+		this.heartbeatUrl = "http://" + serverAddr + "/backend/heartbeat";
+		this.shutdownUrl = "http://" + serverAddr + "/backend/shutdown";
+
+		this.uuid = UUID.randomUUID();
 		this.isRunning = true;
 		this.start();
 	}
@@ -32,7 +42,7 @@ public class HeartbeatSender extends Thread {
 	private final int SEND_INTERVAL = 5000;
 	private final int FIRST_SEND_INTERVAL = 500;
 	private final String OK = "OK";
-	
+
 	int tick = 0;
 	boolean isFirst = true;
 
@@ -58,7 +68,7 @@ public class HeartbeatSender extends Thread {
 
 		String response = HttpRequest.sendPost(this.heartbeatUrl, this.uuid.toString());
 
-		if (response == OK ) {
+		if (response == OK) {
 			this.isFirst = false;
 		}
 	}
@@ -66,5 +76,11 @@ public class HeartbeatSender extends Thread {
 	public void shutdown() throws InterruptedException {
 		this.setRunning(false);
 		this.join();
+
+		// send shutdown
+		String response = HttpRequest.sendPost(this.shutdownUrl, this.uuid.toString());
+		if (response != OK) {
+			LOG.warn("Send shutdown failed");
+		}
 	}
 }

@@ -9,3 +9,7 @@
 
 # 打包运行
 	mvn package exec:java
+
+# 下载依赖项的源代码及文档
+	mvn dependency:sources
+	mvn dependency:resolve -Dclassifier=javadoc

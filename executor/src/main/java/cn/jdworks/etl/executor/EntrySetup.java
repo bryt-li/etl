@@ -19,7 +19,7 @@ public class EntrySetup implements Setup {
 	private final Log LOG = Logs.getLog(this.getClass());
 
 	private final UUID uuid = UUID.randomUUID();
-	
+
 	@Inject
 	private TaskManager taskManager;
 
@@ -32,32 +32,34 @@ public class EntrySetup implements Setup {
 	@Inject
 	private LogsReporter logsReporter;
 
+	@Inject("java:$config.get('serverAddr')")
+	private String serverAddr;
+
+	
 	public void init(NutConfig conf) {
-		/*
 		try {
-			this.taskManager.startManager(uuid);
-			this.ftpTaskSynchronizer.init();
-			this.heartbeatSender.init(uuid);
-			this.logsReporter.init(uuid);
+			this.heartbeatSender.startSender(serverAddr);
+			this.taskManager.startManager();
+			this.ftpTaskSynchronizer.startSynchronizer();
+			this.logsReporter.startReporter();
 		} catch (Exception e) {
 			LOG.fatal(e);
+			//throw runtime exception to stop the webapp
+			//but this behavior depends on container
 			throw new RuntimeException();
 		}
-		*/
 	}
 
 	public void destroy(NutConfig conf) {
-		/*
+
 		try {
+			this.heartbeatSender.shutdown();
 			this.taskManager.shutdown();
 			this.ftpTaskSynchronizer.shutdown();
-			this.heartbeatSender.shutdown();
 			this.logsReporter.shutdown();
 		} catch (Exception e) {
 			LOG.fatal(e);
 			throw new RuntimeException();
 		}
-		*/
 	}
-
 }

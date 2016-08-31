@@ -5,16 +5,14 @@ import org.nutz.ioc.loader.annotation.IocBean;
 @IocBean(singleton = true)
 public class FtpTaskSynchronizer extends Thread {
 	private boolean isRunning = false;
-
 	public synchronized boolean isRunning() {
 		return isRunning;
 	}
-
 	public synchronized void setRunning(boolean isRunning) {
 		this.isRunning = isRunning;
 	}
 
-	public void init() {
+	public void startSynchronizer() {
 		this.isRunning = true;
 		this.start();
 	}
