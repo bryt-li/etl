@@ -6,19 +6,22 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.UUID;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
 public class HeartbeatSenderTest {
+
+	private final static Log LOG = Logs.getLog(HeartbeatSenderTest.class);
 
 	private static int PORT = 3333;
 	private HeartbeatSender sender;
@@ -37,10 +40,6 @@ public class HeartbeatSenderTest {
 
 	@After
 	public void after() {
-	}
-	
-	private boolean isFirstInterval(long interval) {
-		return interval > 0 && interval < HeartbeatSender.FIRST_SEND_INTERVAL;
 	}
 
 	private boolean isShortInterval(long interval) {
@@ -70,21 +69,12 @@ public class HeartbeatSenderTest {
 		this.sender.startSender("localhost:" + port);
 
 		handler.waitForExit();
-		
-		
-		System.out.println("Exit.");
+
 		this.sender.shutdown();
 		server.stop(0);
 
-		int i = 0;
-		
 		for (long interval : handler.getIntervals()) {
-			System.out.println(interval);
-			if (i == 0)
-				assertTrue(isFirstInterval(interval));
-			else
-				assertTrue(isShortInterval(interval));
-			i++;
+			assertTrue(isShortInterval(interval));
 		}
 	}
 
@@ -95,7 +85,16 @@ public class HeartbeatSenderTest {
 		}
 
 		public void handle(HttpExchange t) throws IOException {
-			super.recordInterval();
+			LOG.debug(t.getRequestURI().toString());
+			try {
+				if (t.getRequestURI().toString().equals("/backend/heartbeat")) {
+					this.recordInterval();
+				} else if (t.getRequestURI().toString().equals("/backend/shutdown")) {
+					//not record shutdown
+				}
+			} catch (Exception e) {
+				exit();
+			}
 		}
 	}
 
@@ -109,21 +108,14 @@ public class HeartbeatSenderTest {
 		this.sender = new HeartbeatSender();
 		this.sender.startSender("localhost:" + port);
 		handler.setStartupTimestamp();
-		
+
 		handler.waitForExit();
 
-		System.out.println("Exit.");
 		this.sender.shutdown();
 		server.stop(0);
 
-		int i = 0;
 		for (long interval : handler.getIntervals()) {
-			System.out.println(interval);
-			if (i == 0)
-				assertTrue(isFirstInterval(interval));
-			else
-				assertTrue(isShortInterval(interval));
-			i++;
+			assertTrue(isShortInterval(interval));
 		}
 	}
 
@@ -134,6 +126,7 @@ public class HeartbeatSenderTest {
 		}
 
 		public void handle(HttpExchange t) throws IOException {
+			LOG.debug(t.getRequestURI().toString());
 			try {
 				if (t.getRequestURI().toString().equals("/backend/heartbeat")) {
 					this.sendResponse(t, "ERR");
@@ -157,26 +150,21 @@ public class HeartbeatSenderTest {
 		this.sender = new HeartbeatSender();
 		this.sender.startSender("localhost:" + port);
 		handler.setStartupTimestamp();
-		
+
 		handler.waitForExit();
 
-		System.out.println("Exit.");
 		this.sender.shutdown();
 		server.stop(0);
 
 		int i = 0;
 		for (long interval : handler.getIntervals()) {
-			
-			if (i == 0) {
-				assertTrue(isFirstInterval(interval));
-			} else if (i == 1 || i == 2) {
+
+			if (i == 0 || i == 1 || i == 2) {
 				assertTrue(isShortInterval(interval));
-			}else if (i == 3) {
+			} else if (i == 3 || i == 4) {
 				assertTrue(isLongInterval(interval));
-			} else if (i == 4) {
-				assertTrue(isShortInterval(interval));
 			} else if (i == 5) {
-				assertTrue(isLongInterval(interval));
+				assertTrue(isShortInterval(interval));
 			}
 			i++;
 		}
@@ -190,15 +178,16 @@ public class HeartbeatSenderTest {
 		}
 
 		public void handle(HttpExchange t) throws IOException {
+			LOG.debug(t.getRequestURI().toString());
 			try {
 				if (t.getRequestURI().toString().equals("/backend/heartbeat")) {
 					UUID uuid = this.getPostUUID(t);
 					assertNotNull(uuid);
-					
+
 					String response = null;
-					if (count == 0 || count==1) {
+					if (count == 0 || count == 1) {
 						response = "ERR";
-					} else if ( count==2 || count == 3) {
+					} else if (count == 2 || count == 3) {
 						response = HeartbeatSender.OK;
 					} else if (count == 4) {
 						response = "ERR";

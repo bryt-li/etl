@@ -65,7 +65,6 @@ public class HeartbeatSender extends Thread {
 
 		this.tick = 0;
 
-		LOG.debug("heartbeat send.");
 		String response = HttpRequest.sendPost(this.heartbeatUrl, this.uuid.toString(),FIRST_SEND_INTERVAL/2,FIRST_SEND_INTERVAL/2);
 
 		if (response.equals(OK)) {

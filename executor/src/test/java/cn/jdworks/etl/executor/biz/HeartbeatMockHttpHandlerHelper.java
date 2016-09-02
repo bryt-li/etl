@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.locks.ReentrantLock;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -22,7 +21,6 @@ public class HeartbeatMockHttpHandlerHelper {
 		return this.intervals;
 	}
 
-	private ReentrantLock lock;
 	private long last;
 	private int exitReqNum = 0;
 
@@ -30,10 +28,12 @@ public class HeartbeatMockHttpHandlerHelper {
 		this.intervals = new ArrayList<Long>();
 		this.exitReqNum = exitReqNum;
 	}
-	protected synchronized void waitForExit() throws Exception{
+
+	protected synchronized void waitForExit() throws Exception {
 		this.wait();
 	}
-	protected void exit(){
+
+	protected synchronized void exit() {
 		this.notify();
 	}
 
@@ -57,7 +57,6 @@ public class HeartbeatMockHttpHandlerHelper {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(t.getRequestBody()));
 		String line;
 		while ((line = reader.readLine()) != null) {
-			System.out.println("client request data:" + line);
 			UUID uuid = UUID.fromString(line);
 			return uuid;
 		}
@@ -69,9 +68,10 @@ public class HeartbeatMockHttpHandlerHelper {
 		long interval = current - last;
 		this.intervals.add(interval);
 		last = current;
-		if (++count >= exitReqNum)
-			this.lock.unlock();
-		System.out.println("count:" + count + " interval:" + interval + " exit request num:" + exitReqNum);
+		count++;
+		//System.out.println("count:" + count + " interval:" + interval + " exit request num:" + exitReqNum);
+		if (count >= exitReqNum)
+			this.exit();
 	}
 
 }
