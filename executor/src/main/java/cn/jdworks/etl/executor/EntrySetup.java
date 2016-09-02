@@ -35,10 +35,12 @@ public class EntrySetup implements Setup {
 	@Inject("java:$config.get('serverAddr')")
 	private String serverAddr;
 
+	@Inject("java:$config.get('tasksDir')")
+	private String tasksDir;
 	
 	public void init(NutConfig conf) {
 		try {
-			this.heartbeatSender.startSender(serverAddr);
+			this.heartbeatSender.startSender(uuid, serverAddr, tasksDir);
 			this.taskManager.startManager();
 			this.ftpTaskSynchronizer.startSynchronizer();
 			this.logsReporter.startReporter();
