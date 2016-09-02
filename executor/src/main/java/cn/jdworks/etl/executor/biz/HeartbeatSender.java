@@ -52,7 +52,7 @@ public class HeartbeatSender extends Thread {
 				sleep(s);
 				this.tick += s;
 				trySend();
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
 			}
 		}
 	}
@@ -65,7 +65,8 @@ public class HeartbeatSender extends Thread {
 
 		this.tick = 0;
 
-		String response = HttpRequest.sendPost(this.heartbeatUrl, this.uuid.toString());
+		LOG.debug("heartbeat send.");
+		String response = HttpRequest.sendPost(this.heartbeatUrl, this.uuid.toString(),FIRST_SEND_INTERVAL/2,FIRST_SEND_INTERVAL/2);
 
 		if (response.equals(OK)) {
 			this.isFirst = false;
@@ -79,9 +80,11 @@ public class HeartbeatSender extends Thread {
 		this.join();
 
 		// send shutdown
-		String response = HttpRequest.sendPost(this.shutdownUrl, this.uuid.toString());
-		if (!response.equals(OK)) {
+		String response = HttpRequest.sendPost(this.shutdownUrl, this.uuid.toString(),1000,1000);
+		if (response==null || !response.equals(OK))
 			LOG.warn("Send shutdown failed. Expect: "+ OK + " But return: " + response);
-		}
+		else
+			LOG.debug("Heart beat sender shut down.");
+			
 	}
 }

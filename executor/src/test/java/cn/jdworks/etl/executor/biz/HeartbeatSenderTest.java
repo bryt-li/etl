@@ -1,14 +1,12 @@
 package cn.jdworks.etl.executor.biz;
 
-import static org.junit.Assert.*;
-import java.io.BufferedReader;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -22,6 +20,7 @@ import com.sun.net.httpserver.HttpServer;
 
 public class HeartbeatSenderTest {
 
+	private static int PORT = 3333;
 	private HeartbeatSender sender;
 
 	@BeforeClass
@@ -34,155 +33,188 @@ public class HeartbeatSenderTest {
 
 	@Before
 	public void before() {
-
 	}
 
 	@After
 	public void after() {
+	}
+	
+	private boolean isFirstInterval(long interval) {
+		return interval > 0 && interval < HeartbeatSender.FIRST_SEND_INTERVAL;
+	}
 
+	private boolean isShortInterval(long interval) {
+		return interval >= HeartbeatSender.FIRST_SEND_INTERVAL && interval < HeartbeatSender.FIRST_SEND_INTERVAL * 2;
+	}
+
+	private boolean isLongInterval(long interval) {
+		return interval >= HeartbeatSender.SEND_INTERVAL && interval < HeartbeatSender.SEND_INTERVAL * 2;
+	}
+
+	private HttpServer newMockHttpServer(int port, HttpHandler handler) throws Exception {
+		HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+		server.createContext("/backend", handler);
+		server.setExecutor(null); // creates a default executor
+		return server;
 	}
 
 	@Test
-	public void testHeartbeatWhenServerError() throws Exception {
-		int port = 3333;
-		HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
-		ErrorHandler handler = new ErrorHandler();
-		server.createContext("/backend", handler);
-		server.setExecutor(null); // creates a default executor
+	public void testHeartbeatWithDumbServer() throws Exception {
+		int port = PORT + 1;
+		DumbHandler handler = new DumbHandler(3);
+		HttpServer server = newMockHttpServer(port, handler);
 		server.start();
+		handler.setStartupTimestamp();
 
 		this.sender = new HeartbeatSender();
 		this.sender.startSender("localhost:" + port);
 
-		Thread.sleep(5000);
-
+		handler.waitForExit();
+		
+		
+		System.out.println("Exit.");
 		this.sender.shutdown();
-
 		server.stop(0);
 
-		handler.assertInterval();
+		int i = 0;
+		
+		for (long interval : handler.getIntervals()) {
+			System.out.println(interval);
+			if (i == 0)
+				assertTrue(isFirstInterval(interval));
+			else
+				assertTrue(isShortInterval(interval));
+			i++;
+		}
 	}
 
-	static class ErrorHandler implements HttpHandler {
+	static class DumbHandler extends HeartbeatMockHttpHandlerHelper implements HttpHandler {
 
-		private List<Long> intervals = new ArrayList<Long>();
-		private Long last;
-
-		public ErrorHandler() {
-			last = System.currentTimeMillis();
+		public DumbHandler(int exitReqNum) {
+			super(exitReqNum);
 		}
 
 		public void handle(HttpExchange t) throws IOException {
-			String response = "";
-			if (t.getRequestURI().toString().equals("/backend/heartbeat")) {
-				response = "ERR";
-				t.sendResponseHeaders(200, response.length());
-				OutputStream os = t.getResponseBody();
-				os.write(response.getBytes());
-				os.close();
+			super.recordInterval();
+		}
+	}
 
-				Long current = System.currentTimeMillis();
-				intervals.add(current - last);
-				last = current;
-			} else if (t.getRequestURI().toString().equals("/backend/shutdown")) {
-				response = HeartbeatSender.OK;
-				t.sendResponseHeaders(200, response.length());
-				OutputStream os = t.getResponseBody();
-				os.write(response.getBytes());
-				os.close();
-			}
-			System.out.println(t.getRequestURI().toString() + " " + response);
+	@Test
+	public void testHeartbeatWithBadServer() throws Exception {
+		int port = PORT + 2;
+		BadHandler handler = new BadHandler(3);
+		HttpServer server = newMockHttpServer(port, handler);
+		server.start();
+
+		this.sender = new HeartbeatSender();
+		this.sender.startSender("localhost:" + port);
+		handler.setStartupTimestamp();
+		
+		handler.waitForExit();
+
+		System.out.println("Exit.");
+		this.sender.shutdown();
+		server.stop(0);
+
+		int i = 0;
+		for (long interval : handler.getIntervals()) {
+			System.out.println(interval);
+			if (i == 0)
+				assertTrue(isFirstInterval(interval));
+			else
+				assertTrue(isShortInterval(interval));
+			i++;
+		}
+	}
+
+	static class BadHandler extends HeartbeatMockHttpHandlerHelper implements HttpHandler {
+
+		public BadHandler(int exitReqNum) {
+			super(exitReqNum);
 		}
 
-		public void assertInterval() {
-			for (long interval : this.intervals) {
-				System.out.println(interval);
-				assertTrue(interval > HeartbeatSender.FIRST_SEND_INTERVAL);
-				assertTrue(interval < HeartbeatSender.FIRST_SEND_INTERVAL*2);
+		public void handle(HttpExchange t) throws IOException {
+			try {
+				if (t.getRequestURI().toString().equals("/backend/heartbeat")) {
+					this.sendResponse(t, "ERR");
+					this.recordInterval();
+				} else if (t.getRequestURI().toString().equals("/backend/shutdown")) {
+					this.sendResponse(t, HeartbeatSender.OK);
+				}
+			} catch (Exception e) {
+				exit();
 			}
 		}
 	}
 
 	@Test
-	public void testHeartbeatWhenServerOk() throws Exception {
-		int port = 3333;
-		HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
-		OkHandler handler = new OkHandler();
-		server.createContext("/backend", handler);
-		server.setExecutor(null); // creates a default executor
+	public void testHeartbeatWithGoodServer() throws Exception {
+		int port = PORT + 3;
+		GoodHandler handler = new GoodHandler(6);
+		HttpServer server = newMockHttpServer(port, handler);
 		server.start();
 
 		this.sender = new HeartbeatSender();
 		this.sender.startSender("localhost:" + port);
+		handler.setStartupTimestamp();
+		
+		handler.waitForExit();
 
-		Thread.sleep(25000);
-
+		System.out.println("Exit.");
 		this.sender.shutdown();
-
 		server.stop(0);
 
-		handler.assertInterval();
+		int i = 0;
+		for (long interval : handler.getIntervals()) {
+			
+			if (i == 0) {
+				assertTrue(isFirstInterval(interval));
+			} else if (i == 1 || i == 2) {
+				assertTrue(isShortInterval(interval));
+			}else if (i == 3) {
+				assertTrue(isLongInterval(interval));
+			} else if (i == 4) {
+				assertTrue(isShortInterval(interval));
+			} else if (i == 5) {
+				assertTrue(isLongInterval(interval));
+			}
+			i++;
+		}
+
 	}
 
-	static class OkHandler implements HttpHandler {
+	static class GoodHandler extends HeartbeatMockHttpHandlerHelper implements HttpHandler {
 
-		private List<Long> intervals = new ArrayList<Long>();
-		private Long last;
-
-		public OkHandler() {
-			last = System.currentTimeMillis();
+		public GoodHandler(int exitReqNum) {
+			super(exitReqNum);
 		}
 
 		public void handle(HttpExchange t) throws IOException {
-			String response = "";
-			if (t.getRequestURI().toString().equals("/backend/heartbeat")) {
-				assertEquals(t.getRequestMethod(), "POST");
-				BufferedReader reader = new BufferedReader(new InputStreamReader(t.getRequestBody()));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					System.out.println("client request data:" + line);
-					UUID uuid = UUID.fromString(line);
+			try {
+				if (t.getRequestURI().toString().equals("/backend/heartbeat")) {
+					UUID uuid = this.getPostUUID(t);
 					assertNotNull(uuid);
-				}
-				response = HeartbeatSender.OK;
-				t.sendResponseHeaders(200, response.length());
-				OutputStream os = t.getResponseBody();
-				os.write(response.getBytes());
-				os.close();
-
-				Long current = System.currentTimeMillis();
-				intervals.add(current - last);
-				last = current;
-			} else if (t.getRequestURI().toString().equals("/backend/shutdown")) {
-				assertEquals(t.getRequestMethod(), "POST");
-				BufferedReader reader = new BufferedReader(new InputStreamReader(t.getRequestBody()));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					System.out.println("client request data:" + line);
-					UUID uuid = UUID.fromString(line);
+					
+					String response = null;
+					if (count == 0 || count==1) {
+						response = "ERR";
+					} else if ( count==2 || count == 3) {
+						response = HeartbeatSender.OK;
+					} else if (count == 4) {
+						response = "ERR";
+					} else if (count == 5) {
+						response = HeartbeatSender.OK;
+					}
+					this.sendResponse(t, response);
+					this.recordInterval();
+				} else if (t.getRequestURI().toString().equals("/backend/shutdown")) {
+					UUID uuid = this.getPostUUID(t);
 					assertNotNull(uuid);
-				}
-				response = HeartbeatSender.OK;
-				t.sendResponseHeaders(200, response.length());
-				OutputStream os = t.getResponseBody();
-				os.write(response.getBytes());
-				os.close();
-			}
-			System.out.println(t.getRequestURI().toString() + " " + response);
-		}
 
-		public void assertInterval() {
-			int i = 0;
-			for (long interval : this.intervals) {
-				System.out.println(interval);
-				if (i == 0) {
-					assertTrue(interval > 0);
-					assertTrue(interval < HeartbeatSender.FIRST_SEND_INTERVAL*2);
-				} else {
-					assertTrue(interval > HeartbeatSender.SEND_INTERVAL);
-					assertTrue(interval < HeartbeatSender.SEND_INTERVAL*2);
+					this.sendResponse(t, HeartbeatSender.OK);
 				}
-				i++;
+			} catch (Exception e) {
+				exit();
 			}
 		}
 	}
