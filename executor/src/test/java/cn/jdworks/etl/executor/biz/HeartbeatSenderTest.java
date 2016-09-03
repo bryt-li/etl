@@ -24,6 +24,8 @@ public class HeartbeatSenderTest {
 	private final static Log LOG = Logs.getLog(HeartbeatSenderTest.class);
 
 	private static int PORT = 3333;
+	private static UUID uuid = UUID.randomUUID();
+	
 	private HeartbeatSender sender;
 
 	@BeforeClass
@@ -66,7 +68,7 @@ public class HeartbeatSenderTest {
 		handler.setStartupTimestamp();
 
 		this.sender = new HeartbeatSender();
-		this.sender.startSender("localhost:" + port);
+		this.sender.startSender(uuid, "localhost:" + port);
 
 		handler.waitForExit();
 
@@ -106,7 +108,7 @@ public class HeartbeatSenderTest {
 		server.start();
 
 		this.sender = new HeartbeatSender();
-		this.sender.startSender("localhost:" + port);
+		this.sender.startSender(uuid, "localhost:" + port);
 		handler.setStartupTimestamp();
 
 		handler.waitForExit();
@@ -148,7 +150,7 @@ public class HeartbeatSenderTest {
 		server.start();
 
 		this.sender = new HeartbeatSender();
-		this.sender.startSender("localhost:" + port);
+		this.sender.startSender(uuid, "localhost:" + port);
 		handler.setStartupTimestamp();
 
 		handler.waitForExit();

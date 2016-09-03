@@ -19,8 +19,8 @@ public class App {
 //	private JmsConnector jmsConnector;
 	private TcpConnector tcpConnector;
 	
-	private List<TaskRuntime> runningTasks;
-	private synchronized void addRunningTask(TaskRuntime task){
+	private List<TaskRunner> runningTasks;
+	private synchronized void addRunningTask(TaskRunner task){
 		this.runningTasks.add(task);
 	}
 
@@ -66,7 +66,7 @@ public class App {
 			tcpConnector = new TcpConnector(this, tcpServerAddr, tcpServerPort);
 			tcpConnector.startConnector();
 			
-			this.runningTasks = new ArrayList<TaskRuntime>();
+			this.runningTasks = new ArrayList<TaskRunner>();
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -75,7 +75,7 @@ public class App {
 	}
 
 	private synchronized void stop() {
-		for(TaskRuntime task : this.runningTasks){
+		for(TaskRunner task : this.runningTasks){
 			task.abortTask();
 		}
 		tcpConnector.stopConnector();
@@ -83,7 +83,8 @@ public class App {
 	}
 
 	public void executeTask(int id, String cmd) {
-		TaskRuntime task = new TaskRuntime(this, id, cmd);
+		/*
+		TaskRunner task = new TaskRunner(this, id, cmd);
 		String error = task.runTask();
 		if (error == null)
 		{
@@ -92,6 +93,7 @@ public class App {
 		}else{
 			this.addLogsToJmsSendingQueue("END", id, (new Date()).getTime(), error);
 		}
+		*/
 	}
 
 	public void addLogsToJmsSendingQueue(String type, int taskId, long timestamp, String log) {

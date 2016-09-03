@@ -9,7 +9,7 @@ import org.nutz.log.Logs;
 import org.nutz.mvc.NutConfig;
 import org.nutz.mvc.Setup;
 
-import cn.jdworks.etl.executor.biz.FtpTaskSynchronizer;
+import cn.jdworks.etl.executor.biz.TaskSynchronizer;
 import cn.jdworks.etl.executor.biz.HeartbeatSender;
 import cn.jdworks.etl.executor.biz.LogsReporter;
 import cn.jdworks.etl.executor.biz.TaskManager;
@@ -24,7 +24,7 @@ public class EntrySetup implements Setup {
 	private TaskManager taskManager;
 
 	@Inject
-	private FtpTaskSynchronizer ftpTaskSynchronizer;
+	private TaskSynchronizer ftpTaskSynchronizer;
 
 	@Inject
 	private HeartbeatSender heartbeatSender;
@@ -35,14 +35,18 @@ public class EntrySetup implements Setup {
 	@Inject("java:$config.get('serverAddr')")
 	private String serverAddr;
 
+	@Inject("java:$config.get('rsyncAddr')")
+	private String rsyncAddr;
+
 	@Inject("java:$config.get('tasksDir')")
 	private String tasksDir;
 	
+	
 	public void init(NutConfig conf) {
 		try {
-			this.heartbeatSender.startSender(uuid, serverAddr, tasksDir);
+			this.heartbeatSender.startSender(uuid, serverAddr);
 			this.taskManager.startManager();
-			this.ftpTaskSynchronizer.startSynchronizer();
+			this.ftpTaskSynchronizer.startSynchronizer(rsyncAddr, tasksDir);
 			this.logsReporter.startReporter();
 		} catch (Exception e) {
 			LOG.fatal(e);
