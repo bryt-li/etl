@@ -5,4 +5,5 @@ public interface TaskEventHandler {
 	void onTaskStartFailed(int id, long ts, String message);
 	void onTaskStopped(int id, long ts, int exit);
 	void onTaskLogged(int id, long ts, String type, String message);
+	void onTaskErrorLogged(int id, long ts, String error);
 }
