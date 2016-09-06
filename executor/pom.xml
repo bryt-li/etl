@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>cn.jdworks.etl</groupId>
 			<artifactId>utils</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/test-jetty-servlet -->
 		<dependency>

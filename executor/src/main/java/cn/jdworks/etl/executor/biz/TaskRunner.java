@@ -1,12 +1,8 @@
 package cn.jdworks.etl.executor.biz;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.util.Date;
 
-import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 
@@ -57,9 +53,26 @@ public class TaskRunner extends Thread {
 			this.eventHandler.onTaskStartFailed(id, System.currentTimeMillis(), error);
 	}
 
-	private void logged(long ts, String type, String message) {
-		if (this.eventHandler != null)
-			this.eventHandler.onTaskLogged(id, ts, type, message);
+	private void logged(String out) {
+		if (this.eventHandler == null)
+			return;
+
+		long ts;
+		String type, message;
+		// Log format:
+		// ts:type:message
+		try {
+			String[] ss = out.split(":");
+			ts = Long.parseLong(ss[0]);
+			type = ss[1];
+			message = ss[2];
+		} catch (Throwable t1) {
+			ts = System.currentTimeMillis();
+			type = "debug";
+			message = out;
+		}
+
+		this.eventHandler.onTaskLogged(id, ts, type, message);
 	}
 
 	private void errorLogged(long ts, String error) {
@@ -89,8 +102,6 @@ public class TaskRunner extends Thread {
 			pb.command(command.split(" "));
 			this.taskProc = pb.start();
 
-			InputStreamReader r = new InputStreamReader(taskProc.getInputStream());
-			rrr///todo...test r.
 			this.stdoutReader = new BufferedReader(new InputStreamReader(taskProc.getInputStream()));
 			this.stderrReader = new BufferedReader(new InputStreamReader(taskProc.getErrorStream()));
 
@@ -104,61 +115,44 @@ public class TaskRunner extends Thread {
 
 	// todo：监听标准输出
 	public void run() {
-		boolean isReady;
 		String line = null;
-		String[] ss;
-		long ts;
-		String type;
-		String message;
 		while (isRunning()) {
 			try {
-				line = null;
-				LOG.debug("*************");
+				if (!stdoutReader.ready() && !stderrReader.ready()) {
+					if (this.taskProc.isAlive()) {
+						Thread.sleep(100);
+						continue;
+					} else {
+						throw new Exception("task is destroyed with no more output, let's quit.");
+					}
+				}
+
 				if (stderrReader.ready()) {
-					LOG.debug("=============");
 					line = stderrReader.readLine();
 					if (line != null) {
 						this.errorLogged(System.currentTimeMillis(), line);
 					}
 				}
+
 				if (stdoutReader.ready()) {
-					LOG.debug("-------------");
 					line = stdoutReader.readLine();
 					if (line != null) {
-						// Log format:
-						// ts:type:message
-						try {
-							ss = line.split(":");
-							ts = Long.parseLong(ss[0]);
-							type = ss[1];
-							message = ss[2];
-						} catch (Throwable t1) {
-							ts = System.currentTimeMillis();
-							type = "debug";
-							message = line;
-						}
-						this.logged(ts, type, message);
+						this.logged(line);
 					}
 				}
-
-				if (!stdoutReader.ready() && !stderrReader.ready()) {
-					if (this.taskProc.isAlive())
-						Thread.sleep(100);
-					else
-						throw new Exception("task is destroyed with no more output, let's quit.");
-				} else if (line == null) {
-					throw new Exception("data is ready for reading but read returns NULL.");
-				}
 			} catch (Throwable t) {
+				LOG.debug(t);
 				this.setRunning(false);
 			}
 		}
 
 		int exit;
 		try {
-			//We may not wait for task exit to quit, so it is possible that here task is still alive
-			//We give this task -1 exit value. 
-			//This does not mean task can not be terminated itself, only means we can not wait for its termination.
+			// We may not wait for task exit to quit, so it is possible that
+			// here task is still alive
+			// We give this task -1 exit value.
+			// This does not mean task can not be terminated itself, only means
+			// we can not wait for its termination.
 			exit = this.taskProc.exitValue();
 		} catch (Exception e) {
 			exit = -1;

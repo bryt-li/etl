@@ -50,14 +50,12 @@ public class MockTaskEventHandler implements TaskEventHandler {
 	}
 
 	public void onTaskStarted(int id, long ts) {
-		// TODO Auto-generated method stub
 		Assert.assertEquals(this.id, id);
 		Assert.assertTrue(ts > 0);
 		this.started = true;
 	}
 
 	public void onTaskStartFailed(int id, long ts, String message) {
-		// TODO Auto-generated method stub
 		System.out.println("FAIL:"+id + ":" + ts + ":" + message);
 		Assert.assertEquals(this.id, id);
 		Assert.assertTrue(ts > 0);
@@ -66,11 +64,9 @@ public class MockTaskEventHandler implements TaskEventHandler {
 	}
 
 	public void onTaskStopped(int id, long ts, int exit) {
-		// TODO Auto-generated method stub
 		System.out.println("STOP:"+id + ":" + ts + ":ExitCode:" + exit);
 		Assert.assertEquals(this.id, id);
 		Assert.assertTrue(ts > 0);
-		Assert.assertTrue(exit > 0);
 		this.stopped = true;
 		exit();
 	}
@@ -78,7 +74,6 @@ public class MockTaskEventHandler implements TaskEventHandler {
 	private int index = 0;
 
 	public void onTaskLogged(int id, long ts, String type, String message) {
-		// TODO Auto-generated method stub
 		System.out.println("LOG:"+id + ":" + ts + ":" + type + ":" + message);
 		Assert.assertEquals(this.id, id);
 		Assert.assertTrue(ts > 0);
@@ -88,7 +83,6 @@ public class MockTaskEventHandler implements TaskEventHandler {
 	}
 
 	public void onTaskErrorLogged(int id, long ts, String error) {
-		// TODO Auto-generated method stub
 		System.out.println("ERR:"+id + ":" + ts + ":" + error);
 		Assert.assertEquals(this.id, id);
 		Assert.assertTrue(ts > 0);

@@ -37,10 +37,12 @@ public class TaskRunnerTest {
 			BufferedWriter w = new BufferedWriter(new FileWriter(file));
 			w.write("from datetime import datetime\n");
 			w.write("import time\n");
+			w.write("import sys\n");
 			type = "info";
 			for (String msg : MESSAGES) {
 				w.write("ts = time.mktime(datetime.now().timetuple())\n");
 				w.write("print (\"%d:" + type + ":" + msg + "\" % ts)\n");
+				w.write("sys.stdout.flush()\n");//this line is important for python
 				w.write("time.sleep(1)\n");
 			}
 
@@ -75,14 +77,14 @@ public class TaskRunnerTest {
 		String cmd = "do_not_exist";
 		TaskRunner runner = new TaskRunner();
 		Assert.assertFalse(runner.startRunner(TASK_ID, cmd, handler));
-		
+
 		handler.assertTaskStartFailed();
 	}
 
 	@Test
 	public void testStartTaskNotExist() throws Exception {
 		MockTaskEventHandler handler = new MockTaskEventHandler(TASK_ID, MESSAGES);
-		String cmd = "python " + "do_not_exist";
+		String cmd = "python " + "do_not_exist.py";
 		TaskRunner runner = new TaskRunner();
 		Assert.assertTrue(runner.startRunner(TASK_ID, cmd, handler));
 		handler.waitForExit();
@@ -117,11 +119,10 @@ public class TaskRunnerTest {
 				runner.abortTask();
 			}
 		};
-		timer.schedule(task, 3000);
+		timer.schedule(task, 1000);
 		handler.waitForExit();
 		LOG.info("Task destroyed: " + cmd);
 
 		handler.assertTaskRunThenAbort();
 	}
-
 }
