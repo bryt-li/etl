@@ -1,9 +1,11 @@
 package cn.jdworks.etl.executor.biz;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -42,7 +44,8 @@ public class TaskRunnerTest {
 			for (String msg : MESSAGES) {
 				w.write("ts = time.mktime(datetime.now().timetuple())\n");
 				w.write("print (\"%d:" + type + ":" + msg + "\" % ts)\n");
-				w.write("sys.stdout.flush()\n");//this line is important for python
+				w.write("sys.stdout.flush()\n");// this line is important for
+												// python
 				w.write("time.sleep(1)\n");
 			}
 
@@ -71,8 +74,42 @@ public class TaskRunnerTest {
 	public void after() {
 	}
 
+//	@Test
+	public void testRunProcess() throws Exception {
+		String command = "ping bing.com";
+		ProcessBuilder pb = new ProcessBuilder();
+		pb.command(command.split(" "));
+		Process taskProc = pb.start();
+
+		BufferedReader stdoutReader = new BufferedReader(new InputStreamReader(taskProc.getInputStream()));
+		String line = null;
+		while (true) {
+			if (taskProc.isAlive() == false)
+				break;
+			if (stdoutReader.ready()) {
+				line = stdoutReader.readLine();
+				if (line == null)
+					break;
+				LOG.info(line);
+			}
+		}
+	}
+	
 	@Test
-	public void testStartTaskFailed() throws Exception {
+	public void testStartTaskRunPing() throws Exception {
+		MockTaskEventHandler handler = new MockTaskEventHandler(TASK_ID, MESSAGES);
+		String cmd = "ping -c 3 bing.com";
+		TaskRunner runner = new TaskRunner();
+		Assert.assertTrue(runner.startRunner(TASK_ID, cmd, handler));
+
+		handler.waitForExit();
+		LOG.info("Task destroyed: " + cmd);
+		handler.assertTaskRunPing();
+	}
+
+
+	@Test
+	public void testTaskStartFailed() throws Exception {
 		MockTaskEventHandler handler = new MockTaskEventHandler(TASK_ID, MESSAGES);
 		String cmd = "do_not_exist";
 		TaskRunner runner = new TaskRunner();
@@ -82,7 +119,7 @@ public class TaskRunnerTest {
 	}
 
 	@Test
-	public void testStartTaskNotExist() throws Exception {
+	public void testTaskNotExist() throws Exception {
 		MockTaskEventHandler handler = new MockTaskEventHandler(TASK_ID, MESSAGES);
 		String cmd = "python " + "do_not_exist.py";
 		TaskRunner runner = new TaskRunner();
@@ -94,7 +131,7 @@ public class TaskRunnerTest {
 	}
 
 	@Test
-	public void testStartTaskRun() throws Exception {
+	public void testTaskRunPy() throws Exception {
 		MockTaskEventHandler handler = new MockTaskEventHandler(TASK_ID, MESSAGES);
 		String cmd = "python " + TEST_SCRIPT;
 		TaskRunner runner = new TaskRunner();
@@ -102,11 +139,11 @@ public class TaskRunnerTest {
 
 		handler.waitForExit();
 		LOG.info("Task destroyed: " + cmd);
-		handler.assertTaskRunThenError();
+		handler.assertTaskRunPy();
 	}
 
 	@Test
-	public void testStartTaskRunThenAbort() throws Exception {
+	public void testTaskRunPyThenAbort() throws Exception {
 		MockTaskEventHandler handler = new MockTaskEventHandler(TASK_ID, MESSAGES);
 		String cmd = "python " + TEST_SCRIPT;
 		final TaskRunner runner = new TaskRunner();
@@ -123,6 +160,6 @@ public class TaskRunnerTest {
 		handler.waitForExit();
 		LOG.info("Task destroyed: " + cmd);
 
-		handler.assertTaskRunThenAbort();
+		handler.assertTaskRunPyThenAbort();
 	}
 }

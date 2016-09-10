@@ -38,15 +38,14 @@ public class EntrySetup implements Setup {
 	@Inject("java:$config.get('rsyncAddr')")
 	private String rsyncAddr;
 
-	@Inject("java:$config.get('tasksDir')")
-	private String tasksDir;
+	private final String TASK_DIR = "/var/tasks";
 	
 	
 	public void init(NutConfig conf) {
 		try {
 			this.heartbeatSender.startSender(uuid, serverAddr);
 			this.taskManager.startManager();
-			this.ftpTaskSynchronizer.startSynchronizer(rsyncAddr, tasksDir);
+			this.ftpTaskSynchronizer.startSynchronizer(rsyncAddr, TASK_DIR);
 			this.logsReporter.startReporter();
 		} catch (Exception e) {
 			LOG.fatal(e);

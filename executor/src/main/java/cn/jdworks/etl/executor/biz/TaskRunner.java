@@ -8,6 +8,20 @@ import org.nutz.log.Logs;
 
 public class TaskRunner extends Thread {
 
+	private final Log LOG = Logs.getLog(this.getClass());
+
+	private int id;
+	private String command;
+
+	public int getTaskId() {
+		return id;
+	}
+
+	public String getTaskCommand() {
+		return command;
+	}
+
+	
 	public synchronized boolean startRunner(int id, String cmd, TaskEventHandler eventHandler) {
 		this.eventHandler = eventHandler;
 		this.id = id;
@@ -16,6 +30,7 @@ public class TaskRunner extends Thread {
 		if (runTask()) {
 			this.setRunning(true);
 			this.start();
+			LOG.debugf("task [%d]:\"%s\" is running.", this.id, this.command);
 			return true;
 		} else {
 			return false;
@@ -31,10 +46,9 @@ public class TaskRunner extends Thread {
 			} catch (Throwable t) {
 				LOG.debug(t);
 			}
+			LOG.debugf("task [%d]:\"%s\" is forcedly stopped.", this.id, this.command);
 		}
 	}
-
-	private final Log LOG = Logs.getLog(this.getClass());
 
 	private TaskEventHandler eventHandler = null;
 
@@ -93,9 +107,6 @@ public class TaskRunner extends Thread {
 		this.isRunning = isRunning;
 	}
 
-	private int id;
-	private String command;
-
 	private boolean runTask() {
 		try {
 			ProcessBuilder pb = new ProcessBuilder();
@@ -113,7 +124,6 @@ public class TaskRunner extends Thread {
 		}
 	}
 
-	// todo：监听标准输出
 	public void run() {
 		String line = null;
 		while (isRunning()) {
@@ -123,7 +133,9 @@ public class TaskRunner extends Thread {
 						Thread.sleep(100);
 						continue;
 					} else {
-						throw new Exception("task is destroyed with no more output, let's quit.");
+						this.setRunning(false);
+						LOG.debugf("task [%d]:\"%s\" is stopped.", this.id, this.command);
+						break;
 					}
 				}
 
@@ -141,7 +153,7 @@ public class TaskRunner extends Thread {
 					}
 				}
 			} catch (Throwable t) {
-				LOG.debug(t);
+				//LOG.debug(t);
 				this.setRunning(false);
 			}
 		}

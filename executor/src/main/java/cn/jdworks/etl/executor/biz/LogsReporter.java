@@ -30,4 +30,11 @@ public class LogsReporter extends Thread {
 		this.setRunning(false);
 		this.join();
 	}
+	
+	
+	public void addLog(int id, long ts, String type, String message) {
+		//todo
+	}
+
+	
 }
