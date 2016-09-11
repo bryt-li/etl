@@ -23,7 +23,7 @@ public class HeartbeatSenderTest {
 
 	private final static Log LOG = Logs.getLog(HeartbeatSenderTest.class);
 
-	private static int PORT = 3333;
+	private final static int PORT = 3333;
 	private static UUID uuid = UUID.randomUUID();
 	
 	private HeartbeatSender sender;

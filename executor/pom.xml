@@ -28,17 +28,17 @@
 			<version>20070405</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>cn.jdworks.etl</groupId>
-			<artifactId>utils</artifactId>
-			<version>1.0</version>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/test-jetty-servlet -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>test-jetty-servlet</artifactId>
 			<version>8.1.19.v20160209</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>cn.jdworks.etl</groupId>
+			<artifactId>utils</artifactId>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.nutz</groupId>

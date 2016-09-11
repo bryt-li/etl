@@ -46,7 +46,7 @@ public class EntrySetup implements Setup {
 			this.heartbeatSender.startSender(uuid, serverAddr);
 			this.taskManager.startManager();
 			this.ftpTaskSynchronizer.startSynchronizer(rsyncAddr, TASK_DIR);
-			this.logsReporter.startReporter();
+			this.logsReporter.startReporter(serverAddr);
 		} catch (Exception e) {
 			LOG.fatal(e);
 			//throw runtime exception to stop the webapp
