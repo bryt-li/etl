@@ -16,6 +16,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
+import cn.jdworks.etl.utils.TaskLog;
 import junit.framework.Assert;
 
 public class LogsReporterTest {
@@ -63,7 +64,8 @@ public class LogsReporterTest {
 			LOG.debugf("Response OK: %s", t.getRequestURI());
 			try {
 				List<TaskLog> list = this.getPostTaskLogs(t);
-				LOG.debugf("Recived logs: %d", list.size());
+				for(TaskLog log : list)
+					LOG.debugf("Recived logs: [%d]-[%d]-[%s]-\"%s\"", log.id, log.ts, log.type, log.message);
 				this.sendResponse(t, LogsReporter.OK);
 			} catch (Exception e) {
 				LOG.debug(e);
@@ -121,12 +123,12 @@ public class LogsReporterTest {
 	public void testLogsReportToServer() throws Exception {
 		logsReporter = new LogsReporter();
 		
-		for (int i = 0; i < 50; i++)
+		for (int i = 0; i <= 50; i++)
 			logsReporter.addLog(i, System.currentTimeMillis(), "debug", "this is test log: " + i);
 
 		logsReporter.startReporter("localhost:" + PORT);
 
-		for (int i = 51; i < 100; i++)
+		for (int i = 51; i <= 100; i++)
 			logsReporter.addLog(i, System.currentTimeMillis(), "info", "this is test log: " + i);
 
 		Thread thread = new Thread(new AddLogsRunnable());
@@ -142,7 +144,7 @@ public class LogsReporterTest {
 	
 	class AddLogsRunnable implements Runnable {
 		public void run() {
-			for (int i = 100; i < 150; i++){
+			for (int i = 101; i < 150; i++){
 				try {
 					Thread.sleep(40);
 				} catch (InterruptedException e) {

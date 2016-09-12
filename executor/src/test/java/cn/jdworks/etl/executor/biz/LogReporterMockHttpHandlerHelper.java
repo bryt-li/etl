@@ -1,12 +1,13 @@
 package cn.jdworks.etl.executor.biz;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.sun.net.httpserver.HttpExchange;
+
+import cn.jdworks.etl.utils.TaskLog;
 
 /**
  * @author lixin This is base class of LogReport Mock HTTP handler

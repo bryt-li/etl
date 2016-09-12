@@ -1,12 +1,15 @@
 package cn.jdworks.etl.executor.biz;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
+
+import cn.jdworks.etl.utils.HttpRequest;
+import cn.jdworks.etl.utils.Serializer;
+import cn.jdworks.etl.utils.TaskLog;
 
 @IocBean(singleton = true)
 public class LogsReporter extends Thread {
@@ -37,14 +40,25 @@ public class LogsReporter extends Thread {
 		this.start();
 	}
 
-	List<TaskLog> sendLogs;
-
 	// every loop push 1-MAX logs
 	public void run() {
-		while (isRunning()) {			
-			sendLogs = this.getSendLogs();
+		while (isRunning()) {
+			byte[] buffer = null;
+			int send = 0;
+			
+			synchronized (this) {
+				int size = this.logs.size();
+				if (size <= MAX)
+					send = size;
+				else
+					send = MAX;
 
-			if (sendLogs == null) {
+				if (send > 0) {
+					buffer = Serializer.serialize(new ArrayList<TaskLog>(this.logs.subList(0, send)));
+				}
+			}
+			
+			if (buffer == null) {
 				try {
 					Thread.sleep(100);
 				} catch (Exception e) {
@@ -52,11 +66,13 @@ public class LogsReporter extends Thread {
 				}
 				continue;
 			}
-			
-			String response = HttpRequest.sendTaskLogs(this.reportUrl, cloneSendLogs(sendLogs), TIMEOUT, TIMEOUT);
+
+			String response = HttpRequest.sendTaskLogs(this.reportUrl, buffer, TIMEOUT, TIMEOUT);
 
 			if (OK.equals(response)) {
-				this.removeSentLogs(sendLogs);
+				synchronized (this) {
+					this.logs = this.logs.subList(send, logs.size());
+				}
 			} else {
 				LOG.warnf("Send logs failed. Return: [%s]", response);
 			}
@@ -71,27 +87,5 @@ public class LogsReporter extends Thread {
 	public synchronized void addLog(int id, long ts, String type, String message) {
 		TaskLog log = new TaskLog(id, ts, type, message);
 		this.logs.add(log);
-	}
-
-	private synchronized List<TaskLog> getSendLogs() {
-		int size = this.logs.size();
-		int send = 0;
-		if (size == 0)
-			return null;
-		if (size <= MAX)
-			send = size;
-		else
-			send = MAX;
-		
-		return this.logs.subList(0, send);
-	}
-	
-	private synchronized List<TaskLog> cloneSendLogs(List<TaskLog> src){
-		List<TaskLog> dst = new ArrayList<TaskLog>(src);
-		return dst;
-	}
-
-	private synchronized void removeSentLogs(List<TaskLog> sentLogs) {
-		sentLogs.clear();
 	}
 }

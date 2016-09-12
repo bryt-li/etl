@@ -6,6 +6,9 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 
+import cn.jdworks.etl.utils.HttpRequest;
+
+
 @IocBean(singleton = true)
 public class HeartbeatSender extends Thread {
 	private final Log LOG = Logs.getLog(this.getClass());
