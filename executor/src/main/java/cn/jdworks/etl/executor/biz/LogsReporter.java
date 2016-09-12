@@ -74,7 +74,12 @@ public class LogsReporter extends Thread {
 					this.logs = this.logs.subList(send, logs.size());
 				}
 			} else {
-				LOG.warnf("Send logs failed. Return: [%s]", response);
+				try {
+					Thread.sleep(1000);
+				} catch (Exception e) {
+					LOG.error(e);
+				}
+				//LOG.debugf("Send logs failed. Return: [%s]", response);
 			}
 		}
 	}

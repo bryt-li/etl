@@ -34,11 +34,13 @@ public class MockClient {
 		return response;
 	}
 
+	
 	public HttpTester post(String url, String content) throws Exception {
 		HttpTester request = new HttpTester();
 		request.setHeader("Host", "tester");
 		request.setVersion("HTTP/1.0");
 		request.setMethod("POST");
+		request.setHeader("Content-Type", "application/x-www-form-urlencoded");
 		request.setURI(PREFIX + url);
 		System.out.println("POST: "+url);
 		

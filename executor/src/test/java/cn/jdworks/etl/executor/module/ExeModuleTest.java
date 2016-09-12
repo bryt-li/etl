@@ -63,4 +63,13 @@ public class ExeModuleTest {
 		assertEquals(200, response.getStatus());
 	}
 	
+	@Test
+	public void testTask() throws Exception{
+		int id = 555;
+		String cmd = "ping bing.com";
+		String content = String.format("id=%d&cmd=%s", id, cmd);
+		HttpTester response = client.post("/task", content);
+		assertEquals(response.getContent(), "\"OK\"");
+	}
+	
 }

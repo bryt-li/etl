@@ -40,12 +40,11 @@ public class EntrySetup implements Setup {
 
 	private final String TASK_DIR = "/var/tasks";
 	
-	
 	public void init(NutConfig conf) {
 		try {
+			this.ftpTaskSynchronizer.startSynchronizer(rsyncAddr, TASK_DIR);
 			this.heartbeatSender.startSender(uuid, serverAddr);
 			this.taskManager.startManager();
-			this.ftpTaskSynchronizer.startSynchronizer(rsyncAddr, TASK_DIR);
 			this.logsReporter.startReporter(serverAddr);
 		} catch (Exception e) {
 			LOG.fatal(e);
@@ -56,10 +55,9 @@ public class EntrySetup implements Setup {
 	}
 
 	public void destroy(NutConfig conf) {
-
 		try {
-			this.heartbeatSender.shutdown();
 			this.taskManager.shutdown();
+			this.heartbeatSender.shutdown();
 			this.ftpTaskSynchronizer.shutdown();
 			this.logsReporter.shutdown();
 		} catch (Exception e) {

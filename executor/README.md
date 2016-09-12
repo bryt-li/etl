@@ -4,11 +4,11 @@
 	mvn package
 
 # 运行
-	mvn exec:java
+	mvn tomcat7:run
 
 
 # 打包运行
-	mvn package exec:java
+	mvn package tomcat7:run
 
 # 下载依赖项的源代码及文档
 	mvn dependency:sources
