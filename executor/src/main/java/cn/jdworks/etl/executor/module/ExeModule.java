@@ -19,9 +19,6 @@ public class ExeModule {
 
 	private final Log LOG = Logs.getLog(this.getClass());
 
-	private static final String OK = "OK";
-	private static final String ERR = "ERROR";
-	
 	@Inject
 	private TaskManager taskManager;
 
@@ -34,14 +31,11 @@ public class ExeModule {
 	
 	@At
 	@POST
-	public String task(int id, String cmd){
+	public boolean task(int id, String cmd){
 		
 		LOG.debugf("[%d]:\"%s\"", id, cmd);
 		
-		if(this.taskManager.runTask(id, cmd))
-			return OK;
-		else
-			return ERR;
+		return this.taskManager.runTask(id, cmd);
 	}
 
 }

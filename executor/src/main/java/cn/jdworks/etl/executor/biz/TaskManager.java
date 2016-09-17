@@ -36,7 +36,7 @@ public class TaskManager implements TaskEventHandler {
 	}
 
 	public boolean runTask(int id, String cmd) {
-		if (this.tasks.containsKey(id)) {
+		if (this.hasTaskRunning(id)) {
 			this.onTaskStartFailed(id, System.currentTimeMillis(),
 					"Duplicated task id: A task with same ID is running.");
 			return false;
@@ -85,6 +85,10 @@ public class TaskManager implements TaskEventHandler {
 
 	private Hashtable<Integer, TaskRunner> tasks;
 
+	private synchronized boolean hasTaskRunning(int id){
+		return this.tasks.containsKey(id);
+	}
+	
 	private synchronized void addTask(int id, TaskRunner task) {
 		this.tasks.put(id, task);
 		//LOG.debugf("task added. id: [%d]",id);

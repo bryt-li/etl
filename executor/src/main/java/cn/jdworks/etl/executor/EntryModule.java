@@ -1,19 +1,9 @@
 package cn.jdworks.etl.executor;
 
-import java.util.UUID;
-
-import org.nutz.ioc.loader.annotation.Inject;
-import org.nutz.ioc.loader.annotation.IocBean;
-import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.Fail;
 import org.nutz.mvc.annotation.IocBy;
 import org.nutz.mvc.annotation.Modules;
-import org.nutz.mvc.annotation.Ok;
-import org.nutz.mvc.annotation.POST;
 import org.nutz.mvc.annotation.SetupBy;
 import org.nutz.mvc.ioc.provider.ComboIocProvider;
-
-import cn.jdworks.etl.executor.biz.TaskManager;
 
 /*
 在整个应用启动或者关闭时，你想做一些额外的处理工作，你可以实现一个 org.nutz.mvc.Setup 接口，并将其配置在主模块上

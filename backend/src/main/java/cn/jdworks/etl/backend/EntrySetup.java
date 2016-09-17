@@ -10,16 +10,12 @@ import org.nutz.log.Logs;
 import org.nutz.mvc.NutConfig;
 import org.nutz.mvc.Setup;
 
-import cn.jdworks.etl.backend.biz.ExeDirSyncFtpServer;
 import cn.jdworks.etl.backend.biz.ExecutorManager;
 import cn.jdworks.etl.backend.biz.TimeTaskScheduler;
 
 @IocBean
 public class EntrySetup implements Setup {
 	private final Log LOG = Logs.getLog(this.getClass());
-
-	@Inject
-	private ExeDirSyncFtpServer ftpServer;
 
 	@Inject
 	private ExecutorManager executorManager;
@@ -36,9 +32,6 @@ public class EntrySetup implements Setup {
 		// start exe ftp dir sync server
 		try {
 			
-			// start ftp server for exe task sync
-			this.ftpServer.startServer();
-
 			// start executors manager
 			this.executorManager.startManager();
 
@@ -56,7 +49,6 @@ public class EntrySetup implements Setup {
 	public void destroy(NutConfig conf) {
 		this.timeTaskScheduler.shutdown();
 		this.executorManager.shutdown();
-		this.ftpServer.shutdown();
 	}
 
 }

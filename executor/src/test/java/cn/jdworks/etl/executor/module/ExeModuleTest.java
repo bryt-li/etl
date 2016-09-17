@@ -69,7 +69,7 @@ public class ExeModuleTest {
 		String cmd = "ping bing.com";
 		String content = String.format("id=%d&cmd=%s", id, cmd);
 		HttpTester response = client.post("/task", content);
-		assertEquals(response.getContent(), "\"OK\"");
+		assertTrue(Boolean.parseBoolean(response.getContent()));
 	}
 	
 }

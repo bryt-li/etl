@@ -131,10 +131,10 @@ public class HeartbeatSenderTest {
 			LOG.debug(t.getRequestURI().toString());
 			try {
 				if (t.getRequestURI().toString().equals("/backend/heartbeat")) {
-					this.sendResponse(t, "ERR");
+					this.sendResponse(t, "False");
 					this.recordInterval();
 				} else if (t.getRequestURI().toString().equals("/backend/shutdown")) {
-					this.sendResponse(t, HeartbeatSender.OK);
+					this.sendResponse(t, "True");
 				}
 			} catch (Exception e) {
 				exit();
@@ -188,13 +188,13 @@ public class HeartbeatSenderTest {
 
 					String response = null;
 					if (count == 0 || count == 1) {
-						response = "ERR";
+						response = Boolean.FALSE.toString();
 					} else if (count == 2 || count == 3) {
-						response = HeartbeatSender.OK;
+						response = Boolean.TRUE.toString();
 					} else if (count == 4) {
-						response = "ERR";
+						response = Boolean.FALSE.toString();
 					} else if (count == 5) {
-						response = HeartbeatSender.OK;
+						response = Boolean.TRUE.toString();
 					}
 					this.sendResponse(t, response);
 					this.recordInterval();
@@ -202,7 +202,7 @@ public class HeartbeatSenderTest {
 					UUID uuid = this.getPostUUID(t);
 					assertNotNull(uuid);
 
-					this.sendResponse(t, HeartbeatSender.OK);
+					this.sendResponse(t, Boolean.TRUE.toString());
 				}
 			} catch (Exception e) {
 				exit();

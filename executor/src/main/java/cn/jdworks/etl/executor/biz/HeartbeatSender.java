@@ -17,6 +17,7 @@ public class HeartbeatSender extends Thread {
 
 	private String heartbeatUrl;
 	private String shutdownUrl;
+	
 	private final String HEARTBEAT_URL_FMT = "http://%s/backend/heartbeat";
 	private final String SHUTDOWN_URL_FMT = "http://%s/backend/shutdown";
 
@@ -42,7 +43,6 @@ public class HeartbeatSender extends Thread {
 
 	public static final int SEND_INTERVAL = 5000;
 	public static final int FIRST_SEND_INTERVAL = 500;
-	public static final String OK = "OK";
 
 	int tick = 0;
 	boolean isFirst = true;
@@ -69,7 +69,7 @@ public class HeartbeatSender extends Thread {
 		String response = HttpRequest.sendPost(this.heartbeatUrl, this.uuid.toString(), FIRST_SEND_INTERVAL / 2,
 				FIRST_SEND_INTERVAL / 2);
 
-		if (OK.equals(response)) {
+		if (Boolean.parseBoolean(response)) {
 			this.isFirst = false;
 		} else {
 			this.isFirst = true;
@@ -82,10 +82,10 @@ public class HeartbeatSender extends Thread {
 
 		// send shutdown
 		String response = HttpRequest.sendPost(this.shutdownUrl, this.uuid.toString(), 1000, 1000);
-		if (OK.equals(response))
+		if (Boolean.parseBoolean(response))
 			LOG.debug("Heart beat sender shut down.");
 		else
-			LOG.warnf("Send shutdown failed. Expect: %s but Return: %s", OK, response);
-
+			LOG.warnf("Send shutdown failed because server returns: %s", response);
 	}
+	
 }
