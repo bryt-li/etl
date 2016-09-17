@@ -15,10 +15,7 @@ import cn.jdworks.etl.backend.biz.ExecutorManager;
 @At("/timetask")
 @Ok("json")
 @Fail("http:500")
-public class TimeTaskModule {
-
-	@Inject
-	protected Dao dao;
+public class TimeTaskModule extends BaseModule{
 
 	@Inject
 	protected ExecutorManager executorManager;

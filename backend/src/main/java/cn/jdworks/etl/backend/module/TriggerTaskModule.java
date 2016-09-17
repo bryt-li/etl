@@ -10,7 +10,7 @@ import cn.jdworks.etl.backend.biz.TriggerTaskManager;
 @At("/triggertask")
 @Ok("json")
 @Fail("http:500")
-public class TriggerTaskModule {
+public class TriggerTaskModule extends BaseModule{
 
 	@Inject
 	protected TriggerTaskManager triggerTaskManager;

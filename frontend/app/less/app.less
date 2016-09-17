@@ -1,0 +1,45 @@
+@import "../../node_modules/amazeui/less/variables";
+@import "../../node_modules/amazeui/less/mixins";
+
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+.ask-page {
+  height: 100%;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+}
+
+.ask-header {
+  margin-bottom: 0;
+}
+
+.ask-main {
+  flex: 1;
+}
+
+.ask-banner {
+  background-color: #f8f8f8;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.ask-footer {
+  background-color: @gray;
+  color: @gray-light;
+  flex-shrink: 0;
+
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  p {
+    font-size: 1.3rem;
+    margin: 0;
+  }
+}

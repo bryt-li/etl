@@ -8,8 +8,7 @@
 	<version>1.0</version>
 
 	<name>ETL Backend Web Application</name>
-	<url>http://www.jdworks.cn</url>
-
+	<url>http://www.mr-v.cn</url>
 
 	<build>
 		<finalName>backend</finalName>
@@ -24,13 +23,29 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
+					<path>/</path>
 					<port>9090</port>
 					<uriEncoding>UTF-8</uriEncoding>
+					<!-- Make sure NOT set reload true in production deploy. -->
+					<contextReloadable>true</contextReloadable>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.shiro/shiro-all -->
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-all</artifactId>
+			<version>1.3.1</version>
+		</dependency>
 		<dependency>
 			<groupId>cn.jdworks.etl</groupId>
 			<artifactId>utils</artifactId>
@@ -58,10 +73,11 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.38</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid</artifactId>
-			<version>1.0.16</version>
+			<version>1.0.25</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
 		<dependency>
