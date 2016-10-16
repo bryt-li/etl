@@ -33,6 +33,16 @@
 		</plugins>
 	</build>
 	<dependencies>
+		<dependency>
+            <groupId>org.nutz</groupId>
+            <artifactId>nutz-integration-shiro</artifactId>
+            <version>1.r.56</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+            <version>1.3.0</version>
+        </dependency>
 		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -60,7 +70,7 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>test-jetty-servlet</artifactId>
-			<version>8.1.19.v20160209</version>
+			<version>8.1.15.v20140411</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

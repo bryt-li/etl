@@ -1,19 +1,14 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>   
-<!DOCTYPE web-app    
-PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"    
-"http://java.sun.com/dtd/web-app_2_3.dtd">
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <web-app>
 	<display-name>ETL Backend Web Application</display-name>
 
 	<listener>
 		<listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
 	</listener>
-
 	<filter>
 		<filter-name>ShiroFilter</filter-name>
 		<filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
 	</filter>
-
 	<filter-mapping>
 		<filter-name>ShiroFilter</filter-name>
 		<url-pattern>/*</url-pattern>
