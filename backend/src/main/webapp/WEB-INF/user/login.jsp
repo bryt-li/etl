@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <jsp:include page="/WEB-INF/_inc/header.jsp"></jsp:include>
-
 <div class="middle">
 	<div class="container">
 		<div class="col-md-12 content">

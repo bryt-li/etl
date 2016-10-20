@@ -13,6 +13,7 @@
 	</c:if>
 </head>
 <body>
+    <div>
     <!-- Site header and navigation -->
     <header class="__top" role="header">
         <div class="container">

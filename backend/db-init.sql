@@ -8,5 +8,5 @@ default-character-set=utf8
 
 DROP DATABASE IF EXISTS etl;
 CREATE DATABASE etl CHARACTER SET utf8;
-CREATE USER 'etl'@'localhost' IDENTIFIED BY 'etl';
+CREATE USER 'etl'@'localhost' IDENTIFIED BY 'etl888';
 GRANT ALL PRIVILEGES ON etl.* TO 'etl'@'localhost';
