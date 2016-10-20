@@ -28,3 +28,9 @@ local.properties
 
 # Locally stored "Eclipse launch configurations"
 *.launch
+
+# Bower & Npm
+bower_components/**
+node_modules/**
+
+
