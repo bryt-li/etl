@@ -12,7 +12,7 @@ import org.nutz.log.Logs;
 
 import cn.jdworks.etl.backend.bean.TimeTask;
 
-@IocBean(singleton=true)
+@IocBean(singleton = true)
 public class TimeTaskScheduler {
 	private final Log LOG = Logs.getLog(this.getClass());
 
@@ -22,16 +22,26 @@ public class TimeTaskScheduler {
 	@Inject
 	private ExecutorManager executorManager;
 
-	private Hashtable<Integer, TaskTimer> timers;	
+	private Hashtable<Integer, TaskTimer> timers;
 
 	public TimeTaskScheduler() {
 		this.timers = new Hashtable<Integer, TaskTimer>();
 	}
 
+	public synchronized boolean createTimeTask(TimeTask task) {
+		try {
+			this.dao.insert(task);
+			return true;
+		} catch (Exception e) {
+			LOG.fatal(e);
+			return false;
+		}
+	}
+
 	public synchronized void startScheduler() {
 		List<TimeTask> list = dao.query(TimeTask.class, null);
-		for(TimeTask task : list){
-			//todo...判断是否需要执行
+		for (TimeTask task : list) {
+			// todo...判断是否需要执行
 			TaskTimer timer = new TaskTimer(this, task);
 			try {
 				timer.start();
@@ -45,7 +55,7 @@ public class TimeTaskScheduler {
 	}
 
 	public synchronized void shutdown() {
-		for(TaskTimer timer : this.timers.values()){
+		for (TaskTimer timer : this.timers.values()) {
 			timer.stop();
 		}
 	}

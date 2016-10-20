@@ -7,6 +7,7 @@ import org.nutz.dao.entity.annotation.ColDefine;
 import org.nutz.dao.entity.annotation.ColType;
 import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
+import org.nutz.dao.entity.annotation.Name;
 import org.nutz.dao.entity.annotation.Table;
 
 @Table("TimeTask")
@@ -26,6 +27,7 @@ public class TimeTask {
 	private int Id;
 
 	@Column
+	@Name
 	private String Name;
 
 	@Column
@@ -38,6 +40,9 @@ public class TimeTask {
 	
 	@Column
 	private Date FirstExeTime;
+
+	@Column
+	private boolean IsRepeated;
 
 	@Column
 	private int ExeInterval;
@@ -68,6 +73,14 @@ public class TimeTask {
 		this.Name = Name;
 	}
 
+	public boolean isIsRepeated() {
+		return IsRepeated;
+	}
+
+	public void setIsRepeated(boolean isRepeated) {
+		IsRepeated = isRepeated;
+	}
+	
 	/**
 	 * Set the value of ExeInterval.
 	 **/

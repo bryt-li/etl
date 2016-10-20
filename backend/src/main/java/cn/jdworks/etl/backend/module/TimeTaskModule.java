@@ -1,30 +1,79 @@
 package cn.jdworks.etl.backend.module;
 
-import org.nutz.dao.Dao;
-
+import java.util.List;
 
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
-import org.nutz.mvc.annotation.*;
-import java.util.List;
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
+import org.nutz.mvc.ViewModel;
+import org.nutz.mvc.annotation.At;
+import org.nutz.mvc.annotation.DELETE;
+import org.nutz.mvc.annotation.Fail;
+import org.nutz.mvc.annotation.GET;
+import org.nutz.mvc.annotation.Ok;
+import org.nutz.mvc.annotation.POST;
+import org.nutz.mvc.annotation.Param;
 
 import cn.jdworks.etl.backend.bean.TimeTask;
 import cn.jdworks.etl.backend.biz.ExecutorManager;
+import cn.jdworks.etl.backend.biz.TimeTaskScheduler;
 
 @IocBean
-@At("/timetask")
+@At("/time")
 @Ok("json")
 @Fail("http:500")
 public class TimeTaskModule extends BaseModule{
 
+	private final Log LOG = Logs.getLog(this.getClass());
+
 	@Inject
 	protected ExecutorManager executorManager;
+	
+	@Inject
+	protected TimeTaskScheduler timeTaskScheduler;
 
+	@Ok("re:jsp:time.list")
 	@At("/")
 	@GET
-	public List<TimeTask> getAllTasks() {
+	public String listAll(ViewModel model) {
+		if (getMe() == null)
+			return redirectToLoginPage();
+		
+		return null;
+	}
+	
+	@At
+	@GET
+	public List<TimeTask> list(){
+		if (getMe() == null)
+			return null;
+		
 		List<TimeTask> list = dao.query(TimeTask.class, null);
 		return list;
+	}
+	
+	@Ok("re:jsp:time.create")
+	@At("/new")
+	@GET
+	public String createTaskPage(ViewModel model) {
+		model.setv("js", "time/create.js");
+		if (getMe() == null)
+			return redirectToLoginPage();
+		
+		return null;
+	}
+	
+	@At("/new")
+	@POST
+	public String createTask(@Param("..")TimeTask task) {
+		if (getMe() == null)
+			return "用户未登录";
+		
+		if(this.timeTaskScheduler.createTimeTask(task))			
+			return "OK";
+		else
+			return "ERROR";
 	}
 
 	@At("/?")

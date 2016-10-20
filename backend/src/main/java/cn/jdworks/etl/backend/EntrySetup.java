@@ -30,16 +30,15 @@ public class EntrySetup implements Setup {
 		Ioc ioc = conf.getIoc();
 		Dao dao = ioc.get(Dao.class);
 		
-		Daos.createTablesInPackage(dao, "cn.jdworks.etl.backend.bean", false);
+		Daos.createTablesInPackage(dao, "cn.jdworks.etl.backend.bean", true);
 		
 		// 初始化默认根用户
         if (dao.count(User.class) == 0) {
             User user = new User();
             user.setUsername("admin");
             user.setPassword("admin");
-            user.setCreateTime(new Date());
-            user.setUpdateTime(new Date());
             dao.insert(user);
+            LOG.debug("Create default user. name='admin' password='admin'");
         }
         
 /*

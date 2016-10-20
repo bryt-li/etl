@@ -1,0 +1,23 @@
+{
+  "name": "webapp",
+  "authors": [
+    "Lixin <lixin@ngblab.org>"
+  ],
+  "description": "ETL Backend webapp",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "eonasdan-bootstrap-datetimepicker": "^4.17.43",
+    "bootstrap": "^3.3.7",
+    "bootstrap3-dialog": "^1.35.3"
+  }
+}
