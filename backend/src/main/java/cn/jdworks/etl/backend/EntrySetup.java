@@ -1,7 +1,5 @@
 package cn.jdworks.etl.backend;
 
-import java.util.Date;
-
 import org.nutz.dao.Dao;
 import org.nutz.dao.util.Daos;
 import org.nutz.ioc.Ioc;
@@ -35,10 +33,11 @@ public class EntrySetup implements Setup {
 		// 初始化默认根用户
         if (dao.count(User.class) == 0) {
             User user = new User();
-            user.setUsername("admin");
+            user.setAccount("admin");
             user.setPassword("admin");
+            user.setName("Lixin");
             dao.insert(user);
-            LOG.debug("Create default user. name='admin' password='admin'");
+            LOG.debug("Create default user. account='admin' password='admin'");
         }
         
 /*

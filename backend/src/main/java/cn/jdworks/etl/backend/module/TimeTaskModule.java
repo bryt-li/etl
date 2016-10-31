@@ -6,7 +6,6 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
-import org.nutz.mvc.ViewModel;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.DELETE;
 import org.nutz.mvc.annotation.Fail;
@@ -32,16 +31,6 @@ public class TimeTaskModule extends BaseModule{
 	
 	@Inject
 	protected TimeTaskScheduler timeTaskScheduler;
-
-	@Ok("re:jsp:time.list")
-	@At("/")
-	@GET
-	public String listAll(ViewModel model) {
-		if (getMe() == null)
-			return redirectToLoginPage();
-		
-		return null;
-	}
 	
 	@At
 	@GET
@@ -51,17 +40,6 @@ public class TimeTaskModule extends BaseModule{
 		
 		List<TimeTask> list = dao.query(TimeTask.class, null);
 		return list;
-	}
-	
-	@Ok("re:jsp:time.create")
-	@At("/new")
-	@GET
-	public String createTaskPage(ViewModel model) {
-		model.setv("js", "time/create.js");
-		if (getMe() == null)
-			return redirectToLoginPage();
-		
-		return null;
 	}
 	
 	@At("/new")
@@ -99,6 +77,7 @@ public class TimeTaskModule extends BaseModule{
 	// default to @At("/timertask/count")
 	@At
 	public int count() {
+		LOG.debug("count");
 		return 0;
 	}
 }

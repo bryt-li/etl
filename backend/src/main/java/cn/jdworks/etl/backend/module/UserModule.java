@@ -7,14 +7,10 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.util.NutMap;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
-import org.nutz.mvc.ViewModel;
 import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.Attr;
 import org.nutz.mvc.annotation.Fail;
-import org.nutz.mvc.annotation.GET;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.POST;
-import org.nutz.mvc.annotation.Param;
 
 import cn.jdworks.etl.backend.bean.User;
 
@@ -25,6 +21,38 @@ public class UserModule extends BaseModule {
 
 	private final Log LOG = Logs.getLog(this.getClass());
 
+	//the following is for pure html/js frontend request
+	
+	@At
+	@POST
+	public Object login(String account, String password) {
+		User user = dao.fetch(User.class, Cnd.where("account", "=", account).and("password", "=", password));
+		if (user == null) {
+			return new NutMap().setv("ok", false).setv("err", "用户名和密码不匹配");
+		} else {
+			this.saveMe(user.getId());
+			return new NutMap().
+					setv("ok", true).
+					setv("data", new NutMap().
+							setv("id", user.getId()).
+							setv("name",user.getName()).
+							setv("role", "管理员"));
+		}
+	}
+
+	@At
+	@POST
+	public Object logout(HttpSession session) {
+		LOG.debug("User ID "+ this.getMe() + " logout.");
+		session.invalidate();
+		return new NutMap().setv("ok", true);
+	}
+	
+	
+	/*
+	//the following is for traditional JSP request
+	//I disabled them as our frontend is a react-redux base app.
+	
 	@GET
 	@At("/login")
 	@Ok("re:jsp:user.login")
@@ -65,8 +93,8 @@ public class UserModule extends BaseModule {
 
 	@At
 	@POST
-	public Object login(@Param("username") String name, @Param("password") String password, HttpSession session) {
-		User user = dao.fetch(User.class, Cnd.where("username", "=", name).and("password", "=", password));
+	public Object login(@Param("account") String account, @Param("password") String password, HttpSession session) {		
+		User user = dao.fetch(User.class, Cnd.where("account", "=", account).and("password", "=", password));
 		if (user == null) {
 			return false;
 		} else {
@@ -98,5 +126,5 @@ public class UserModule extends BaseModule {
 	public int count() {
 		return dao.count(User.class);
 	}
-
+	*/
 }

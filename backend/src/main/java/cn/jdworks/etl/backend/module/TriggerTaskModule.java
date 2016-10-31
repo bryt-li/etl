@@ -1,14 +1,12 @@
 package cn.jdworks.etl.backend.module;
 
-import java.util.List;
-
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
-import org.nutz.mvc.ViewModel;
-import org.nutz.mvc.annotation.*;
+import org.nutz.mvc.annotation.At;
+import org.nutz.mvc.annotation.Fail;
+import org.nutz.mvc.annotation.Ok;
+import org.nutz.mvc.annotation.Param;
 
-import cn.jdworks.etl.backend.bean.TimeTask;
-import cn.jdworks.etl.backend.bean.TriggerTask;
 import cn.jdworks.etl.backend.biz.TriggerTaskManager;
 
 @IocBean
@@ -20,17 +18,6 @@ public class TriggerTaskModule extends BaseModule{
 	@Inject
 	protected TriggerTaskManager triggerTaskManager;
 
-	@Ok("re:jsp:trig.list")
-	@At("/")
-	@GET
-	public String listAll(ViewModel model) {
-		if (getMe() == null)
-			return redirectToLoginPage();
-		
-		List<TriggerTask> list = dao.query(TriggerTask.class, null);
-		model.setv("list", list);
-		return null;
-	}
 	
 	@At("/t/?")
 	public boolean triggerTask(String url, @Param("..") String args) {

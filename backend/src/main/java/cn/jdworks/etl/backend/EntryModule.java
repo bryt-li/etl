@@ -7,6 +7,7 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.mvc.annotation.At;
+import org.nutz.mvc.annotation.ChainBy;
 import org.nutz.mvc.annotation.Fail;
 import org.nutz.mvc.annotation.IocBy;
 import org.nutz.mvc.annotation.Modules;
@@ -33,6 +34,7 @@ import cn.jdworks.etl.backend.biz.ExecutorManager;
  * 将自动搜索主模块所在的包（包括子包）下所有的类，如果有类包括了一个以上的入口函数将被认为是模块类
  */
 @Modules(scanPackage = true)
+@ChainBy(args={"conf/chain.js"})// Insert CorsProcessor to enable CORS access
 @IocBean
 @At("/")
 @Ok("json")

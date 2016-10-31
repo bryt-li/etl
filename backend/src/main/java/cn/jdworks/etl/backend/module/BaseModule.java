@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import org.nutz.dao.Condition;
 import org.nutz.dao.Dao;
 import org.nutz.dao.QueryResult;
@@ -26,6 +24,10 @@ public abstract class BaseModule {
 
 	@Inject("java:$conf.get('website.urlbase')")
 	protected String urlbase;
+	
+	protected void saveMe(int id){
+		Mvcs.getHttpSession(true).setAttribute("me", id);
+	}
 	
 	protected Integer getMe(){
 		return (Integer)Mvcs.getHttpSession(true).getAttribute("me");
@@ -84,7 +86,6 @@ public abstract class BaseModule {
 		return re;
 	}
 	
-	@SuppressWarnings("unchecked")
 	protected static <T> List<T> _list(T ... args) {
 		return Arrays.asList(args);
 	}
