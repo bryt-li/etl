@@ -16,7 +16,8 @@
     "path-to-regexp": "^1.6.0",
     "qs": "^6.3.0",
     "react": "^15.1.0",
-    "react-dom": "^15.1.0"
+    "react-dom": "^15.1.0",
+    "reconnecting-websocket": "^3.0.2"
   },
   "devDependencies": {
     "atool-build": "^0.7.6",

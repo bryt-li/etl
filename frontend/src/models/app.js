@@ -3,6 +3,8 @@ import { routerRedux } from 'dva/router';
 
 import * as service from "../services/user";
 
+//import ReconnectingWebsocket from 'reconnecting-websocket/dist/index.js';
+const WebSocket = require('reconnecting-websocket');
 
 export default {
 
@@ -31,7 +33,6 @@ export default {
   	]
   },
 
-
   subscriptions: {
     
     /*user authentication*/
@@ -40,6 +41,16 @@ export default {
         dispatch({ type: 'checkLogin', payload: {pathname}});
       });
     },
+
+    /*websocket connection*/
+    msgReceive({dispatch}){
+      const ws = new WebSocket('ws://localhost:8088/');
+      ws.debug = true;
+      ws.reconnectInterval = 4000;
+      ws.onmessage = (event) => {
+        console.log('MESSAGE: ' + event.data);
+      };
+    }
 
   },
 
